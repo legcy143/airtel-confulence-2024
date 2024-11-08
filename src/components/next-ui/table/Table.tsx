@@ -1,5 +1,5 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 import {
   Table,
   TableHeader,
@@ -19,15 +19,22 @@ import {
   cn,
   Select,
   SelectItem,
-} from '@nextui-org/react';
-import { ChevronDownIcon, PlusIcon, SearchIcon, VerticalDotsIcon } from './Icons';
-import { Icon } from '@iconify/react';
-import { Capitalize } from '@/utils/TextTransform';
+  TableVariantProps,
+} from "@nextui-org/react";
+import {
+  ChevronDownIcon,
+  PlusIcon,
+  SearchIcon,
+  VerticalDotsIcon,
+} from "./Icons";
+import { Icon } from "@iconify/react";
+import { Capitalize } from "@/utils/TextTransform";
 
-interface columnInterface {
+export interface columnInterface {
   uid: string;
   name: string;
   sortable?: boolean;
+  className?: string;
 }
 
 interface statusOptionsInterface {
@@ -47,7 +54,10 @@ interface TableProps {
   statusOptions: statusOptionsInterface[];
   INITIAL_VISIBLE_COLUMNS?: string[];
   TotalNumberOfData?: number;
-  renderCell?: (item: tableDataInterface, columnKey: string | number) => React.ReactNode;
+  renderCell?: (
+    item: tableDataInterface,
+    columnKey: string | number
+  ) => React.ReactNode;
   onPageChange?: (pagenumber: number) => void;
   currentPage?: number;
   action?: React.ReactNode;
@@ -55,10 +65,12 @@ interface TableProps {
   headerTitle?: string;
   headerAccumulate?: boolean;
   className?: string;
-  selectionMode?: 'multiple' | 'none' | 'single';
+  selectionMode?: "multiple" | "none" | "single";
   disabledKeys?: string[];
   numberOfDataPerPage?: number;
+  classNames?: any;
   setNumberOfDataPerPage?: (num: number) => void;
+  varients?: TableVariantProps;
 }
 
 export default function TableUI({
@@ -75,33 +87,40 @@ export default function TableUI({
   headerTitle,
   headerAccumulate = false,
   className,
-  selectionMode = 'multiple',
+  selectionMode = "multiple",
   disabledKeys = [],
   onPageChange,
   currentPage = 1,
   numberOfDataPerPage = 10,
   setNumberOfDataPerPage,
+  classNames,
+  varients = {
+    color: "danger",
+  },
 }: TableProps) {
   const GetInitialVisibleColumns = React.useMemo(() => {
     let arr: string[] = [];
-    columns.forEach(column => {
+    columns.forEach((column) => {
       arr.push(column.uid);
     });
     return arr;
   }, [columns]);
-  const INITIAL_VISIBLE_COLUMNS_LOCAL = INITIAL_VISIBLE_COLUMNS || GetInitialVisibleColumns;
+  const INITIAL_VISIBLE_COLUMNS_LOCAL =
+    INITIAL_VISIBLE_COLUMNS || GetInitialVisibleColumns;
 
-  const [filterValue, setFilterValue] = React.useState('');
+  const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
-  const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS_LOCAL));
-  const [statusFilter, setStatusFilter] = React.useState('all');
+  const [visibleColumns, setVisibleColumns] = React.useState(
+    new Set(INITIAL_VISIBLE_COLUMNS_LOCAL)
+  );
+  const [statusFilter, setStatusFilter] = React.useState("all");
   const [rowsPerPage, setRowsPerPage] = React.useState(numberOfDataPerPage);
   const [sortDescriptor, setSortDescriptor] = React.useState<{
     column: string;
-    direction: 'ascending' | 'descending';
+    direction: "ascending" | "descending";
   }>({
-    column: 'age',
-    direction: 'ascending',
+    column: "age",
+    direction: "ascending",
   });
   const [page, setPage] = React.useState(currentPage);
 
@@ -112,17 +131,26 @@ export default function TableUI({
       return columns;
     }
     // console.log("columns", columns)
-    return columns.filter(column => Array.from(visibleColumns).includes(column.uid));
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.uid)
+    );
   }, [visibleColumns, columns]);
 
   const filteredItems = React.useMemo(() => {
     let filteredUsers = [...tableData];
 
     if (hasSearchFilter) {
-      filteredUsers = filteredUsers.filter(data => data?.name?.toLowerCase()?.includes(filterValue?.toLowerCase()));
+      filteredUsers = filteredUsers.filter((data) =>
+        data?.name?.toLowerCase()?.includes(filterValue?.toLowerCase())
+      );
     }
-    if (statusFilter !== 'all' && Array.from(statusFilter).length !== statusOptions.length) {
-      filteredUsers = filteredUsers.filter(data => Array.from(statusFilter).includes(data?.status as string));
+    if (
+      statusFilter !== "all" &&
+      Array.from(statusFilter).length !== statusOptions.length
+    ) {
+      filteredUsers = filteredUsers.filter((data) =>
+        Array.from(statusFilter).includes(data?.status as string)
+      );
     }
 
     return filteredUsers;
@@ -146,7 +174,7 @@ export default function TableUI({
       const second = b[column];
       const cmp = first < second ? -1 : first > second ? 1 : 0;
 
-      return sortDescriptor.direction === 'descending' ? -cmp : cmp;
+      return sortDescriptor.direction === "descending" ? -cmp : cmp;
     });
   }, [sortDescriptor, items]);
 
@@ -164,12 +192,16 @@ export default function TableUI({
     }
   }, [page]);
 
-  const onRowsPerPageChange = React.useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setRowsPerPage(Number(e.target.value));
-    if (setNumberOfDataPerPage) setNumberOfDataPerPage(Number(e.target.value));
-    setPage(1);
-    if (onPageChange) onPageChange(1);
-  }, []);
+  const onRowsPerPageChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setRowsPerPage(Number(e.target.value));
+      if (setNumberOfDataPerPage)
+        setNumberOfDataPerPage(Number(e.target.value));
+      setPage(1);
+      if (onPageChange) onPageChange(1);
+    },
+    []
+  );
 
   const onSearchChange = React.useCallback((value: string) => {
     if (value) {
@@ -177,12 +209,12 @@ export default function TableUI({
       setPage(1);
       if (onPageChange) onPageChange(1);
     } else {
-      setFilterValue('');
+      setFilterValue("");
     }
   }, []);
 
   const onClear = React.useCallback(() => {
-    setFilterValue('');
+    setFilterValue("");
     setPage(1);
     if (onPageChange) onPageChange(1);
   }, []);
@@ -191,7 +223,7 @@ export default function TableUI({
     return (
       <div className="flex flex-col gap-4">
         {headerTitle && (
-          <header className={cn('flex items-center gap-3 p-2')}>
+          <header className={cn("flex items-center gap-3 p-2")}>
             {icon && <Icon icon={icon} className="text-2xl" />}
             <h1 className="text-xl font-semibold">{title}</h1>
           </header>
@@ -210,7 +242,10 @@ export default function TableUI({
             {statusOptions?.length > 0 && (
               <Dropdown>
                 <DropdownTrigger className="hidden sm:flex">
-                  <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
+                  <Button
+                    endContent={<ChevronDownIcon className="text-small" />}
+                    variant="flat"
+                  >
                     Status
                   </Button>
                 </DropdownTrigger>
@@ -220,8 +255,11 @@ export default function TableUI({
                   closeOnSelect={false}
                   selectedKeys={statusFilter}
                   selectionMode="multiple"
-                  onSelectionChange={keys => setStatusFilter(Array.from(keys).join(','))}>
-                  {statusOptions.map(status => (
+                  onSelectionChange={(keys) =>
+                    setStatusFilter(Array.from(keys).join(","))
+                  }
+                >
+                  {statusOptions.map((status) => (
                     <DropdownItem key={status.uid} className="capitalize">
                       {Capitalize(status.name)}
                     </DropdownItem>
@@ -231,7 +269,10 @@ export default function TableUI({
             )}
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={<ChevronDownIcon className="text-small" />} variant="flat">
+                <Button
+                  endContent={<ChevronDownIcon className="text-small" />}
+                  variant="flat"
+                >
                   Columns
                 </Button>
               </DropdownTrigger>
@@ -241,8 +282,11 @@ export default function TableUI({
                 closeOnSelect={false}
                 selectedKeys={visibleColumns}
                 selectionMode="multiple"
-                onSelectionChange={keys => setVisibleColumns(new Set(Array.from(keys) as string[]))}>
-                {columns.map(column => (
+                onSelectionChange={(keys) =>
+                  setVisibleColumns(new Set(Array.from(keys) as string[]))
+                }
+              >
+                {columns.map((column) => (
                   <DropdownItem key={column.uid} className="capitalize">
                     {Capitalize(column.name)}
                   </DropdownItem>
@@ -254,7 +298,7 @@ export default function TableUI({
         </div>
         <div className="flex justify-between items-center">
           <span className="text-default-400 text-small">
-            Total {TotalNumberOfData ?? tableData.length + ' '} {title}
+            Total {TotalNumberOfData ?? tableData.length + " "} {title}
           </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
@@ -271,7 +315,8 @@ export default function TableUI({
             <select
               className="bg-transparent outline-none text-default-400 text-small"
               value={rowsPerPage}
-              onChange={onRowsPerPageChange}>
+              onChange={onRowsPerPageChange}
+            >
               <option value="5">5</option>
               <option value="10">10</option>
               <option value="15">15</option>
@@ -296,30 +341,39 @@ export default function TableUI({
       <div className="py-2 px-2 flex justify-between items-center">
         <span className="w-[30%] text-small text-default-400">
           {selectedKeys.size === items.length
-            ? 'All items selected'
+            ? "All items selected"
             : `${selectedKeys.size} of ${filteredItems.length} selected`}
         </span>
         <Pagination
           classNames={{
             cursor:
-              'bg-gradient-to-b shadow-lg from-primary-300 to-primary-700 dark:from-default-300 dark:to-default-100 text-white font-bold',
+              "bg-gradient-to-b shadow-lg from-danger-300 to-danger-700 dark:from-danger-300 dark:to-danger-100 text-white font-bold",
           }}
           isCompact
           showControls
-          showShadow
-          color="primary"
+          color="danger"
           page={page}
           total={pages}
-          onChange={e => {
+          onChange={(e) => {
             setPage(e);
             if (onPageChange) onPageChange(e);
           }}
         />
         <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+          <Button
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onPress={onPreviousPage}
+          >
             Previous
           </Button>
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+          <Button
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onPress={onNextPage}
+          >
             Next
           </Button>
         </div>
@@ -332,31 +386,34 @@ export default function TableUI({
       isHeaderSticky
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
-      className={cn('h-full', className)}
+      className={cn("h-full", className)}
       aria-labelledby="Tableui"
-      classNames={
-        {
-          // wrapper: 'h-full',
-          // thead: '-top-3',
-          // th: 'h-[3rem]',
-        }
-      }
+      classNames={classNames}
       selectedKeys={selectedKeys}
       disabledKeys={disabledKeys}
       selectionMode={selectionMode}
       sortDescriptor={sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
+      color={varients.color}
       onSelectionChange={(keys: any) => setSelectedKeys(keys as any)}
       onSortChange={(descriptor: any) =>
-        setSortDescriptor(descriptor as { column: string; direction: 'ascending' | 'descending' })
-      }>
+        setSortDescriptor(
+          descriptor as {
+            column: string;
+            direction: "ascending" | "descending";
+          }
+        )
+      }
+    >
       <TableHeader columns={headerColumns}>
-        {column => (
+        {(column) => (
           <TableColumn
             key={column.uid}
-            align={'center'}
-            allowsSorting={column.sortable}>
+            align={"start"}
+            className={column.className}
+            allowsSorting={column.sortable}
+          >
             {Capitalize(column.name)}
           </TableColumn>
         )}
@@ -366,13 +423,18 @@ export default function TableUI({
           <>
             {isLoading ? (
               <div>
-                {[1, 2, 3, 4, 5]?.map(e => {
+                {[1, 2, 3, 4, 5]?.map((e) => {
                   return (
                     <div key={e} className="flex gap-2">
-                      <Skeleton className="p-2 my-2 flex-1 rounded-lg max-w-14">Loading</Skeleton>
+                      <Skeleton className="p-2 my-2 flex-1 rounded-lg max-w-14">
+                        Loading
+                      </Skeleton>
                       {INITIAL_VISIBLE_COLUMNS?.map((e, i) => {
                         return (
-                          <Skeleton key={e} className="p-2 my-2 flex-1 rounded-lg">
+                          <Skeleton
+                            key={e}
+                            className="p-2 my-2 flex-1 rounded-lg"
+                          >
                             Loading
                           </Skeleton>
                         );
@@ -386,12 +448,15 @@ export default function TableUI({
             )}
           </>
         }
-        items={sortedItems}>
-        {item => (
+        items={sortedItems}
+      >
+        {(item) => (
           <TableRow key={item._id}>
-            {columnKey => (
+            {(columnKey) => (
               <TableCell key={`${item._id}-${columnKey}`}>
-                {renderCell ? renderCell(item, columnKey) : getKeyValue(item, columnKey)}
+                {renderCell
+                  ? renderCell(item, columnKey)
+                  : getKeyValue(item, columnKey)}
               </TableCell>
             )}
           </TableRow>
