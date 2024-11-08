@@ -4,8 +4,8 @@ import Provider from "./Provider";
 import { EventDetail } from "@/constants/EventDetail";
 
 export const metadata: Metadata = {
-  title: "Airtel Fonfuelence",
-  description: "Airtel Fonfuelence 2024",
+  title: "Airtel Confulence",
+  description: "Airtel Confulence 2024",
   icons: {
     icon: EventDetail.logo.favicon,
   },
