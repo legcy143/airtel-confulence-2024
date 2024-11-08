@@ -20,9 +20,9 @@ import {
   Select,
   SelectItem,
 } from '@nextui-org/react';
-import { Capitalize } from '@/utils/TextTransform';
-import { ChevronDownIcon, PlusIcon, SearchIcon, VerticalDotsIcon } from '@repo/ui/src/Icons';
+import { ChevronDownIcon, PlusIcon, SearchIcon, VerticalDotsIcon } from './Icons';
 import { Icon } from '@iconify/react';
+import { Capitalize } from '@/utils/TextTransform';
 
 interface columnInterface {
   uid: string;
