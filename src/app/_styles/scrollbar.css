@@ -1,0 +1,51 @@
+/* want to perfom this style to child elements */
+
+.disable-individual-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.disable-scrollbar > *::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.enable-scrollbar::-webkit-scrollbar {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 0.5rem;
+}
+
+.enable-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(150, 150, 150, 0.7);
+  border-radius: 0.5rem;
+}
+
+.enable-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.9);
+}
+
+.enable-scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(240, 240, 240, 0.8);
+  border-radius: 0.5rem;
+}
+
+.badge-editor-scrollbar::-webkit-scrollbar {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 0.5rem;
+}
+.badge-editor-scrollbar::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 1rem;
+}
+.badge-editor-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #d6d6d6;
+  border-radius: 1rem;
+}
+.badge-editor-scrollbar::-webkit-scrollbar-button {
+  background-color: rgba(39, 38, 62, 0);
+  display: none;
+}
+.badge-editor-scrollbar::-webkit-scrollbar-corner {
+  display: none;
+}
