@@ -6,7 +6,7 @@ import React, { useCallback } from "react";
 import { columnInterface } from "@/components/next-ui/table/Table";
 import ViewMemberOnTable from "../_components/ViewMemberOnTable";
 
-const column: columnInterface[] = [
+export const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem] text-center" },
   { name: "Table", uid: "tablenumber" },
   { name: "Member", uid: "member" },

@@ -1,6 +1,6 @@
 export interface UserInterface {
   seatNumber: number;
-  tableNumber?:number;
+  tableNumber?: number;
   name: string;
   email: string;
 }
@@ -13,9 +13,10 @@ export interface TableInterface {
 
 export interface EventStoreInerface {
   userOnSingleTable: number;
-  isFetchLoading: false;
+  isFetchLoading: boolean;
   tabels: null | TableInterface[];
   users: null | UserInterface[];
   fetchTables: () => void;
   fetchUsers: () => void;
+  swapMemberSheet: () => void;
 }
