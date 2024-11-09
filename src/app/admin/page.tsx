@@ -33,7 +33,7 @@ export default function page() {
           <Tab key="Attendee" title="Attendee">
             <Users />
           </Tab>
-          <Tab key="Swap" title="Swap sheets">
+          <Tab key="Swap" title="Swap seats">
             <SwapUser />
           </Tab>
         </Tabs>

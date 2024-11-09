@@ -20,8 +20,7 @@ export default function Users() {
     if (!users) {
       fetchUsers();
     }
-    console.log(users);
-  }, [users]);
+  }, []);
 
   const renderCell = useCallback((event: any, columnKey: any) => {
     const cellValue = event[columnKey];
@@ -40,7 +39,7 @@ export default function Users() {
       className="flex-1"
       selectionMode="none"
       statusOptions={[]}
-      title="Tables"
+      title="Users"
       renderCell={renderCell}
       tableData={TableDataWithSequence(users ?? [])}
       columns={column}
