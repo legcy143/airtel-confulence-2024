@@ -1,14 +1,14 @@
+"use client";
 import TableUI from "@/components/next-ui/table";
 import { useEventStore } from "@/store/useEventStore";
 import { TableDataWithSequence } from "@/utils/TableData";
-import { Button } from "@nextui-org/react";
 import React, { useCallback } from "react";
-import { Icon } from "@iconify/react";
 import { columnInterface } from "@/components/next-ui/table/Table";
+import ViewMemberOnTable from "../_components/ViewMemberOnTable";
 
 const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem] text-center" },
-  { name: "Table", uid: "tablenumber",},
+  { name: "Table", uid: "tablenumber" },
   { name: "Member", uid: "member" },
 ];
 
@@ -21,17 +21,13 @@ export default function Tables() {
       case "seq":
         return <span className="opacity-90 font-normal">{cellValue}</span>;
       case "tablenumber":
-        return <span className="w-[20rem] opacity-90 font-normal">{"Table#" + cellValue}</span>;
-      case "member":
         return (
-          <Button
-            color="danger"
-            variant="flat"
-            startContent={<Icon icon="fa6-solid:users-line" />}
-          >
-            View Members
-          </Button>
+          <span className="w-[20rem] opacity-90 font-normal">
+            {"Table#" + cellValue}
+          </span>
         );
+      case "member":
+        return <ViewMemberOnTable users={event.users} />;
       default:
         return <div className="w-fit opacity-90 font-normal">{cellValue}</div>;
     }
@@ -48,9 +44,7 @@ export default function Tables() {
         tableData={TableDataWithSequence(tabels ?? [])}
         columns={column}
       />
-      <div className="flex-1">
-        Table Map goes here
-      </div>
+      <div className="flex-1">Table Map goes here</div>
     </section>
   );
 }

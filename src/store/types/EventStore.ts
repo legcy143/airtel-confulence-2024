@@ -1,5 +1,6 @@
 export interface UserInterface {
-  seatnumber: number;
+  seatNumber: number;
+  tableNumber?:number;
   name: string;
   email: string;
 }

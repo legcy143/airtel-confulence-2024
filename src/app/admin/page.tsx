@@ -5,6 +5,7 @@ import React from "react";
 import { Icon } from "@iconify/react";
 import Users from "./_tabs/Users";
 import Tables from "./_tabs/Tables";
+import SwapUser from "./_tabs/SwapUser";
 
 export default function page() {
   return (
@@ -31,6 +32,9 @@ export default function page() {
           </Tab>
           <Tab key="Attendee" title="Attendee">
             <Users />
+          </Tab>
+          <Tab key="Swap" title="Swap sheets">
+            <SwapUser />
           </Tab>
         </Tabs>
       </main>
