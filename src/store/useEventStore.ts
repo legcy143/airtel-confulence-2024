@@ -124,7 +124,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
     },
   ],
 
-  fetchUsers: () => {
+  fetchUsers: async() => {
     let users: UserInterface[] = [];
     get().tabels?.map((e) => {
       if (Array.isArray(e.users)) {

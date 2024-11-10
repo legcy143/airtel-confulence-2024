@@ -17,6 +17,6 @@ export interface EventStoreInerface {
   tabels: null | TableInterface[];
   users: null | UserInterface[];
   fetchTables: () => void;
-  fetchUsers: () => void;
+  fetchUsers: () => Promise<void>;
   swapMemberSheet: () => void;
 }

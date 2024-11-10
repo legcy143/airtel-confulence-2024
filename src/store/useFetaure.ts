@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useEventStore } from "./useEventStore";
 import { UserInterface } from "./types/EventStore";
+import { toast } from "sonner";
 
 interface store {
   swapUserData: {
@@ -37,15 +38,16 @@ export const useFeature = create<store>((set, get) => ({
   },
 
   filteredData: [],
-  SearchUser: (keyword) => {
+  SearchUser: async(keyword) => {
     let users = useEventStore.getState().users;
     if (!users) {
-      useEventStore.getState().fetchUsers();
+      await useEventStore.getState().fetchUsers();
     }
     if (keyword?.length < 1) {
       set({ filteredData: [] });
       return;
     }
+    keyword = keyword.toLowerCase();
     let filtered = users?.filter((e) => {
       if (e.name.toLowerCase().startsWith(keyword) || e.email.toLowerCase().startsWith(keyword)) {
         return e;
