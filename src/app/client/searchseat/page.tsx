@@ -3,7 +3,6 @@ import { EventDetail } from "@/constants/EventDetail";
 import { Button, Divider, Input } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
-import ShowDataTable from "./ShowDataTable";
 import { useFeature } from "@/store/useFetaure";
 import { UserInterface } from "@/store/types/EventStore";
 
@@ -32,7 +31,7 @@ export default function page() {
   };
 
   return (
-    <main>
+    <main className="h-full overflow-y-auto">
       <nav className="px-1 md:px-5 border-b-0 h-[5rem] flex items-center justify-between sticky top-0 backdrop-blur-xl z-30">
         <div className="h-[90%]">
           <img src={EventDetail.logo.lg} className="h-full" alt="" />
@@ -57,31 +56,43 @@ export default function page() {
             onFocus={() => setisDropVisible(true)}
             onBlur={() => handleBlur(500)}
             onChange={(e) => {
+              if (!isDropVisible) {
+                setisDropVisible(true);
+              }
               SearchUser(e.target.value);
             }}
           />
           {/* Dropdown list */}
           {isDropVisible && (
             <div className="absolute top-[3.5rem] w-full rounded-md shadow-lg z-10 bg-default">
-              {!filteredData?.length && <p>no result found</p>}
+              {!filteredData?.length && (
+                <p className="text-center p-2 capitalize">no result found</p>
+              )}
               <ul className="max-h-60 overflow-y-auto">
                 {filteredData?.map((user, index) => (
                   <li
                     key={index}
-                    className="px-4 py-2 cursor-pointer"
+                    className="px-4 py-2 flex items-center gap-3 cursor-pointer"
                     onClick={(e) => {
                       setselectedProfile(user);
                     }}
                   >
-                    {user?.name} ({user?.email})
+                    <span>{user?.name}</span>
+                    <span className="text-sm opacity-80">({user?.email})</span>
                   </li>
                 ))}
               </ul>
             </div>
           )}
         </div>
-        {selectedProfile && <Card data={selectedProfile} />}
-        {/* <ShowDataTable data={filteredData ?? []} /> */}
+        {selectedProfile && (
+          <>
+            <Card data={selectedProfile} />
+          </>
+        )}
+        <div className="bg-red-500 h-fit max-h-[calc(100vh-20rem)] p-0 mb-3 overflow-hidden w-fit mx-auto rounded-md">
+          <img className="object-contain h-full mx-auto" src="/assets/hall-layout.jpg" alt="img" />
+        </div>
       </main>
     </main>
   );
@@ -89,10 +100,10 @@ export default function page() {
 
 const Card = ({ data }: { data: UserInterface }) => {
   return (
-    <div className="m-auto relative drop-shadow-xl size-[10rem] overflow-hidden rounded-xl bg-[#3d3c3d] cursor-pointer">
+    <div className="m-auto relative drop-shadow-xl size-[13rem] overflow-hidden rounded-xl bg-[#3d3c3d] cursor-pointer">
       <div className="absolute flex items-center justify-center text-white z-[1] opacity-90 rounded-xl inset-0.5 bg-[#323132] flex-col">
-        <span className="">Table Number</span>
-        <h2 className="text-5xl font-bold my-auto">{data?.tableNumber}</h2>
+        <span>Table Number</span>
+        <h2 className="text-9xl font-bold my-auto">{data?.tableNumber}3</h2>
         <div className="text-xs w-full truncate flex flex-col p-2 text-center">
           <span>{data?.name}</span>
           <span className="opacity-70">{data?.email ?? "N/A"}</span>
