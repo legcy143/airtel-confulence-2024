@@ -10,7 +10,8 @@ import Links from "./_tabs/Links";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function page() {
-  const defaultKey = useSearchParams().get("tab");
+  const searchparams = useSearchParams();
+  const defaultKey = searchparams?.get("tab");
   const router = useRouter();
   return (
     <main className="overflow-y-auto h-full">
@@ -28,7 +29,7 @@ export default function page() {
           radius="full"
           defaultSelectedKey={defaultKey ?? "Table"}
           onSelectionChange={(e) => {
-            router.push("?tab="+e);
+            router.push("?tab=" + e);
           }}
         >
           <Tab key="Table" title="Table">
