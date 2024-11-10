@@ -88,11 +88,15 @@ export default function page() {
         {selectedProfile && (
           <>
             <Card data={selectedProfile} />
+            <div className="h-fit max-h-[calc(100vh-20rem)] p-0 mb-3 overflow-hidden w-fit mx-auto rounded-md">
+              <img
+                className="object-contain h-full mx-auto"
+                src="/assets/hall-layout.jpg"
+                alt="img"
+              />
+            </div>
           </>
         )}
-        <div className="bg-red-500 h-fit max-h-[calc(100vh-20rem)] p-0 mb-3 overflow-hidden w-fit mx-auto rounded-md">
-          <img className="object-contain h-full mx-auto" src="/assets/hall-layout.jpg" alt="img" />
-        </div>
       </main>
     </main>
   );

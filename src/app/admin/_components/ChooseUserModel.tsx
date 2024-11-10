@@ -117,7 +117,6 @@ export const UserCard = ({
           <div>
             name {data.name} <br />
             table {data.tableNumber} <br />
-            seat {data.seatNumber} <br />
           </div>
         )}
       </div>

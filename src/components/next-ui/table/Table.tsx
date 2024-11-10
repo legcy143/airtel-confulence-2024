@@ -26,7 +26,7 @@ import {
   PlusIcon,
   SearchIcon,
   VerticalDotsIcon,
-} from "./Icons";
+} from "../../Icons";
 import { Icon } from "@iconify/react";
 import { Capitalize } from "@/utils/TextTransform";
 

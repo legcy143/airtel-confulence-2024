@@ -1,5 +1,5 @@
 export interface UserInterface {
-  seatNumber: number;
+  _id: string | number;
   tableNumber?: number;
   name: string;
   email: string;
@@ -12,11 +12,12 @@ export interface TableInterface {
 }
 
 export interface EventStoreInerface {
-  userOnSingleTable: number;
+  maxUserOnSingleTable: number;
   isFetchLoading: boolean;
   tabels: null | TableInterface[];
   users: null | UserInterface[];
   fetchTables: () => void;
   fetchUsers: () => Promise<void>;
   swapMemberSheet: () => void;
+  AddNewMember: (data: UserInterface) => void;
 }

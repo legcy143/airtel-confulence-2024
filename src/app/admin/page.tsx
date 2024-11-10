@@ -7,10 +7,13 @@ import Users from "./_tabs/Users";
 import Tables from "./_tabs/Tables";
 import SwapUser from "./_tabs/SwapUser";
 import Links from "./_tabs/Links";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function page() {
+  const defaultKey = useSearchParams().get("tab");
+  const router = useRouter();
   return (
-    <main>
+    <main className="overflow-y-auto h-full">
       <nav className="px-1 md:px-5 border-b-0 h-[5rem] flex items-center justify-between sticky top-0 backdrop-blur-xl z-30">
         <div className="h-[90%]">
           <img src={EventDetail.logo.lg} className="h-full" alt="" />
@@ -19,7 +22,15 @@ export default function page() {
       </nav>
       <Divider />
       <main className="p-2">
-        <Tabs color={"danger"} aria-label="Tabs colors" radius="full">
+        <Tabs
+          color={"danger"}
+          aria-label="Tabs colors"
+          radius="full"
+          defaultSelectedKey={defaultKey ?? "Table"}
+          onSelectionChange={(e) => {
+            router.push("?tab="+e);
+          }}
+        >
           <Tab key="Table" title="Table">
             <Tables />
           </Tab>
