@@ -1,3 +1,4 @@
+"use client"
 import { TableInterface, UserInterface } from "@/store/types/EventStore";
 import { useEventStore } from "@/store/useEventStore";
 import { Icon } from "@iconify/react/dist/iconify.js";
