@@ -36,7 +36,10 @@ export default function ShowDataTable({ data }: { data: any[] }) {
       <TableHeader columns={columns}>
         {(column) => <TableColumn key={column.key}>{column.label}</TableColumn>}
       </TableHeader>
-      <TableBody items={data}>
+      <TableBody
+        items={data}
+        emptyContent={<p>No Result fot this given keyword</p>}
+      >
         {(item) => (
           <TableRow key={item._id}>
             {(columnKey) => (
@@ -57,7 +60,11 @@ export default function ShowDataTable({ data }: { data: any[] }) {
                     </Button>
                   </Link>
                 ) : (
-                  getKeyValue(item, columnKey)
+                  <>
+                    {getKeyValue(item, columnKey)
+                      ? getKeyValue(item, columnKey)
+                      : "N/A"}
+                  </>
                 )}
               </TableCell>
             )}

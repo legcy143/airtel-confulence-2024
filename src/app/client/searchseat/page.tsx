@@ -1,20 +1,21 @@
 "use client";
 import { EventDetail } from "@/constants/EventDetail";
 import { Button, Divider, Input, Tab, Tabs } from "@nextui-org/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { Icon } from "@iconify/react";
 import ShowDataTable from "./ShowDataTable";
+import { useFeature } from "@/store/useFetaure";
 
 export default function page() {
-  const data = [
-    {
-      _id:1,
-      seq: 1,
-      name: "John",
-      seatNumber:4,
-      tableNumber:2,
-    },
-  ];
+  const filteredData = useFeature((s) => s.filteredData);
+  const SearchUser = useFeature((s) => s.SearchUser);
+  const resteFilterData = useFeature((s) => s.resteFilterData);
+  useEffect(() => {
+    resteFilterData();
+    return () => {
+      resteFilterData();
+    };
+  }, []);
 
   return (
     <main>
@@ -36,8 +37,11 @@ export default function page() {
           label="Search Seat"
           description="Search your seat by email or name "
           placeholder="Name or Email ..."
+          onChange={(e)=>{
+            SearchUser(e.target.value)
+          }}
         />
-        <ShowDataTable data={data} />
+        <ShowDataTable data={(filteredData ?? [])} />
       </main>
     </main>
   );

@@ -50,7 +50,7 @@ export const useFeature = create<store>((set, get) => ({
       if (e.name.toLowerCase().startsWith(keyword) || e.email.toLowerCase().startsWith(keyword)) {
         return e;
       }
-    });
+    })?.slice(0,5);
     set({ filteredData: filtered });
   },
   resteFilterData: () => {
