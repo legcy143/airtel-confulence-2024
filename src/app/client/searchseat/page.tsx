@@ -1,21 +1,35 @@
 "use client";
 import { EventDetail } from "@/constants/EventDetail";
-import { Button, Divider, Input, Tab, Tabs } from "@nextui-org/react";
-import React, { useEffect } from "react";
+import { Button, Divider, Input } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import ShowDataTable from "./ShowDataTable";
 import { useFeature } from "@/store/useFetaure";
+import { UserInterface } from "@/store/types/EventStore";
 
 export default function page() {
   const filteredData = useFeature((s) => s.filteredData);
   const SearchUser = useFeature((s) => s.SearchUser);
   const resteFilterData = useFeature((s) => s.resteFilterData);
+
   useEffect(() => {
     resteFilterData();
     return () => {
       resteFilterData();
     };
   }, []);
+
+  const [isDropVisible, setisDropVisible] = useState(false);
+  const [value, setvalue] = useState("");
+  const [selectedProfile, setselectedProfile] = useState<UserInterface | null>(
+    null
+  );
+
+  const handleBlur = (time: number) => {
+    setTimeout(() => {
+      setisDropVisible(false);
+    }, time);
+  };
 
   return (
     <main>
@@ -31,18 +45,60 @@ export default function page() {
       </nav>
       <Divider />
       <main className="p-2 max-w-[50rem] mx-auto space-y-3">
-        <Input
-          type="search"
-          startContent={<Icon icon="ic:round-search" />}
-          label="Search Seat"
-          description="Search your seat by email or name "
-          placeholder="Name or Email ..."
-          onChange={(e)=>{
-            SearchUser(e.target.value)
-          }}
-        />
-        <ShowDataTable data={(filteredData ?? [])} />
+        <div className="relative w-full group">
+          <Input
+            className="w-full"
+            type="search"
+            startContent={<Icon icon="ic:round-search" />}
+            label="Search Seat"
+            description="Search your seat by email or name"
+            placeholder="Name or Email ..."
+            autoComplete="off"
+            onFocus={() => setisDropVisible(true)}
+            onBlur={() => handleBlur(500)}
+            onChange={(e) => {
+              SearchUser(e.target.value);
+            }}
+          />
+          {/* Dropdown list */}
+          {isDropVisible && (
+            <div className="absolute top-[3.5rem] w-full rounded-md shadow-lg z-10 bg-default">
+              {!filteredData?.length && <p>no result found</p>}
+              <ul className="max-h-60 overflow-y-auto">
+                {filteredData?.map((user, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 cursor-pointer"
+                    onClick={(e) => {
+                      setselectedProfile(user);
+                    }}
+                  >
+                    {user?.name} ({user?.email})
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+        {selectedProfile && <Card data={selectedProfile} />}
+        {/* <ShowDataTable data={filteredData ?? []} /> */}
       </main>
     </main>
   );
 }
+
+const Card = ({ data }: { data: UserInterface }) => {
+  return (
+    <div className="m-auto relative drop-shadow-xl size-[10rem] overflow-hidden rounded-xl bg-[#3d3c3d] cursor-pointer">
+      <div className="absolute flex items-center justify-center text-white z-[1] opacity-90 rounded-xl inset-0.5 bg-[#323132] flex-col">
+        <span className="">Table Number</span>
+        <h2 className="text-5xl font-bold my-auto">{data?.tableNumber}</h2>
+        <div className="text-xs w-full truncate flex flex-col p-2 text-center">
+          <span>{data?.name}</span>
+          <span className="opacity-70">{data?.email ?? "N/A"}</span>
+        </div>
+      </div>
+      <div className="absolute w-56 h-48 bg-white blur-[50px] -left-1/2 -top-1/2"></div>
+    </div>
+  );
+};
