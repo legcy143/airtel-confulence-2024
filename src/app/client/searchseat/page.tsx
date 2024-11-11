@@ -107,7 +107,7 @@ const Card = ({ data }: { data: UserInterface }) => {
     <div className="m-auto relative drop-shadow-xl size-[13rem] overflow-hidden rounded-xl bg-[#3d3c3d] cursor-pointer">
       <div className="absolute flex items-center justify-center text-white z-[1] opacity-90 rounded-xl inset-0.5 bg-[#323132] flex-col">
         <span>Table Number</span>
-        <h2 className="text-9xl font-bold my-auto">{data?.tableNumber}3</h2>
+        <h2 className="text-9xl font-bold my-auto">{data?.tableNumber}</h2>
         <div className="text-xs w-full truncate flex flex-col p-2 text-center">
           <span>{data?.name}</span>
           <span className="opacity-70">{data?.email ?? "N/A"}</span>
