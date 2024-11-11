@@ -27,9 +27,10 @@ type vacantSeatTable = {
 export default function AddNewUserModel() {
   const { onOpen, onOpenChange, onClose, isOpen } = useDisclosure();
   const [data, setdata] = useState<UserInterface>({
-    _id: Math.random(),
+    _id: Math.random().toString(),
     email: "",
     name: "",
+    phoneNumber: "",
     tableNumber: 0,
   });
   const [vacantTable, setacantTable] = useState<vacantSeatTable[]>([]);
@@ -48,9 +49,10 @@ export default function AddNewUserModel() {
   };
   const resetData = () => {
     setdata({
-      _id: Math.random(),
+      _id: Math.random().toString(),
       email: "",
       name: "",
+      phoneNumber: "",
       tableNumber: 0,
     });
     setacantTable([]);
@@ -121,6 +123,7 @@ export default function AddNewUserModel() {
                   <>
                     <Input
                       label="Name"
+                      isRequired={true}
                       placeholder="Enter Member Name"
                       value={data.name}
                       onChange={(e) => {

@@ -1,12 +1,13 @@
 export interface UserInterface {
-  _id: string | number;
+  _id: string;
   tableNumber?: number;
   name: string;
   email: string;
+  phoneNumber?: string;
 }
 
 export interface TableInterface {
-  _id: string | number;
+  _id: string;
   tableNumber: number;
   users: UserInterface[];
 }

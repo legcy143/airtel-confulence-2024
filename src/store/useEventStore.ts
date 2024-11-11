@@ -19,17 +19,11 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
   tabels: null,
 
   fetchUsers: async () => {
-    let users: UserInterface[] = [];
-    get().tabels?.map((e) => {
-      if (Array.isArray(e.users)) {
-        let usersWithtable = e.users.map((x) => ({
-          tableNumber: e.tableNumber,
-          ...x,
-        }));
-        users?.push(...usersWithtable);
-      }
-    }) ?? [];
-    set({ users });
+    try {
+      let res = await axios.get(API_URL + "/airtel/user");
+      set({ users: res.data.data });
+      // get()?.updateTable();
+    } catch (error) {}
   },
   fetchTables: async () => {
     try {
@@ -39,29 +33,59 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
   },
 
   AddNewMember: async (data) => {
-    // let tabels = get()?.tabels ?? [];
-    // if (!data.tableNumber) return;
-    // data.tableNumber = +data.tableNumber;
-    // let tableNumberindex = tabels?.findIndex(
-    //   (e) => e.tableNumber == data.tableNumber
-    // );
-
-    // if (tabels[tableNumberindex]) {
-    //   tabels[tableNumberindex].users.push(data);
-    //   get().fetchUsers();
-    // }
     try {
       const { _id, ...reqbody } = data;
       let createUserRes = await axios.post(API_URL + "/airtel/user", reqbody);
       let newuser: UserInterface = createUserRes.data.data;
 
-      getTableByTableByNumber(newuser.tableNumber);
-      let updateTable = await axios.post(
-        API_URL + "/airtel/table" + newuser.tableNumber
+      let prevTableData = [...(get().tabels ?? [])];
+      let tableBody = prevTableData.find(
+        (e) => e.tableNumber == newuser.tableNumber
       );
+
+      if (!tableBody) {
+        toast.error("somethign went wrong");
+        return;
+      }
+      let newUserIds = tableBody.users.map((e) => e._id);
+      newUserIds.push(newuser._id);
+      // @ts-ignore
+      tableBody.users = newUserIds;
+
+      let updateTable = await axios.post(
+        API_URL + "/airtel/table" + newuser.tableNumber,
+        tableBody
+      );
+      get().fetchTables();
+      get().fetchUsers();
+      toast.success("User created sucessfully");
     } catch (error) {}
   },
 
+  updateTable: async () => {
+    let users = get().users ?? [];
+    let table: { tableNumber: number; users: string[] }[] = [];
+    for (let i = 0; i < users.length; i++) {
+      let currentUser = users[i];
+      let checktable = table.find(
+        (e) => e.tableNumber == currentUser.tableNumber
+      );
+      if (checktable) {
+        checktable.users.push(currentUser._id);
+      } else {
+        table.push({
+          tableNumber: currentUser.tableNumber as number,
+          users: [currentUser._id],
+        });
+      }
+    }
+    for (let i = 0; i < table.length; i++) {
+      let currentTable = table[i];
+      console.log(currentTable);
+      await axios.post(API_URL + "/airtel/table", currentTable);
+    }
+    // console.log("table ", table);
+  },
   swapMemberSheet: () => {
     const data: {
       user1: UserInterface | null;
