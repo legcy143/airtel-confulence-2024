@@ -23,14 +23,17 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
     try {
       let res = await axios.get(API_URL + "/airtel/user");
       set({ users: res.data.data });
-      // get()?.updateTable();
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Internal server error")
+    }
   },
   fetchTables: async () => {
     try {
       let res = await axios.get(API_URL + "/airtel/table");
       set({ tabels: res.data.data });
-    } catch (error) {}
+    } catch (error) {
+      toast.error("Internal server error")
+    }
   },
 
   AddNewMember: async (data) => {
