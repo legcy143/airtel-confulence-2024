@@ -15,6 +15,7 @@ export interface TableInterface {
 export interface EventStoreInerface {
   maxUserOnSingleTable: number;
   isFetchLoading: boolean;
+  isUserFetchLoading:boolean;
   tabels: null | TableInterface[];
   users: null | UserInterface[];
   fetchTables: () => Promise<void>;

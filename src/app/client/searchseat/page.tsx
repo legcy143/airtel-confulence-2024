@@ -5,14 +5,20 @@ import React, { useEffect, useState } from "react";
 import { Icon } from "@iconify/react";
 import { useFeature } from "@/store/useFetaure";
 import { UserInterface } from "@/store/types/EventStore";
+import { useEventStore } from "@/store/useEventStore";
 
 export default function page() {
   const filteredData = useFeature((s) => s.filteredData);
   const SearchUser = useFeature((s) => s.SearchUser);
   const resteFilterData = useFeature((s) => s.resteFilterData);
-
+  const isFetchLoading = useEventStore((s) => s.isFetchLoading);
+  const fetchUsers = useEventStore((s) => s.fetchUsers);
+  const users = useEventStore((s) => s.users);
   useEffect(() => {
     resteFilterData();
+    if (!users) {
+      fetchUsers();
+    }
     return () => {
       resteFilterData();
     };
@@ -54,7 +60,8 @@ export default function page() {
             placeholder="Name or Email ..."
             autoComplete="off"
             onFocus={() => setisDropVisible(true)}
-            onBlur={() => handleBlur(500)}
+            onBlur={() => handleBlur(100)}
+            isDisabled={isFetchLoading}
             onChange={(e) => {
               if (!isDropVisible) {
                 setisDropVisible(true);
@@ -66,7 +73,9 @@ export default function page() {
           {isDropVisible && (
             <div className="absolute top-[3.5rem] w-full rounded-md shadow-lg z-10 bg-default">
               {!filteredData?.length && (
-                <p className="text-center p-2 capitalize">no result found</p>
+                <p className="text-center p-2 capitalize">
+                  {isFetchLoading ? "loading..." : "no result found"}
+                </p>
               )}
               <ul className="max-h-60 overflow-y-auto">
                 {filteredData?.map((user, index) => (
@@ -107,7 +116,13 @@ const Card = ({ data }: { data: UserInterface }) => {
     <div className="m-auto relative drop-shadow-xl size-[13rem] overflow-hidden rounded-xl bg-[#3d3c3d] cursor-pointer">
       <div className="absolute flex items-center justify-center text-white z-[1] opacity-90 rounded-xl inset-0.5 bg-[#323132] flex-col">
         <span>Table Number</span>
-        <h2 className="text-9xl font-bold my-auto">{data?.tableNumber}</h2>
+        {data?.tableNumber == 0 ? (
+          <h2 className="font-bold text-center my-auto text-5xl">
+            Theater seat
+          </h2>
+        ) : (
+          <h2 className="text-9xl font-bold my-auto">{data?.tableNumber}</h2>
+        )}
         <div className="text-xs w-full truncate flex flex-col p-2 text-center">
           <span>{data?.name}</span>
           <span className="opacity-70">{data?.email ?? "N/A"}</span>

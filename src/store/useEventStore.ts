@@ -16,15 +16,18 @@ let API_URL = "https://api-new.gokapturehub.com";
 export const useEventStore = create<EventStoreInerface>((set, get) => ({
   isFetchLoading: false,
   maxUserOnSingleTable: 6,
+  isUserFetchLoading: false,
   users: null,
   tabels: null,
 
   fetchUsers: async () => {
     try {
+      set({ isUserFetchLoading: true });
       let res = await axios.get(API_URL + "/airtel/user");
       set({ users: res.data.data });
     } catch (error) {
       toast.error("Internal server error");
+      set({ isUserFetchLoading: false });
     }
   },
   fetchTables: async () => {
@@ -95,7 +98,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       user1: UserInterface | null;
       user2: UserInterface | null;
     } = useFeature.getState().swapUserData;
-    toast.error("swap data was not save in database we fix this soon")
+    toast.error("swap data was not save in database we fix this soon");
     if (!data.user1) {
       return toast.error("Please select user 1 to swap");
     }
@@ -110,7 +113,5 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
     get().fetchUsers();
   },
 
-  removeMember: (_id)=>{
-
-  }
+  removeMember: (_id) => {},
 }));
