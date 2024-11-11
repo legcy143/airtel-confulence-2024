@@ -10,7 +10,8 @@ import { data } from "framer-motion/client";
 import { swapUsers } from "./helper/SwapUser";
 import axios from "axios";
 
-let API_URL = process.env.NEXT_PUBLIC_API_URL;
+// let API_URL = process.env.NEXT_PUBLIC_API_URL;
+let API_URL = "https://api-new.gokapturehub.com";
 
 export const useEventStore = create<EventStoreInerface>((set, get) => ({
   isFetchLoading: false,
