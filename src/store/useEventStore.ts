@@ -95,7 +95,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       user1: UserInterface | null;
       user2: UserInterface | null;
     } = useFeature.getState().swapUserData;
-
+    toast.error("swap data was not save in database we fix this soon")
     if (!data.user1) {
       return toast.error("Please select user 1 to swap");
     }
