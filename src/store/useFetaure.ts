@@ -49,7 +49,7 @@ export const useFeature = create<store>((set, get) => ({
     }
     keyword = keyword.toLowerCase();
     let filtered = users?.filter((e) => {
-      if (e.name.toLowerCase().startsWith(keyword) || e.email.toLowerCase().startsWith(keyword)) {
+      if (e.name?.toLowerCase()?.startsWith(keyword) || e.email?.toLowerCase()?.startsWith(keyword)) {
         return e;
       }
     })?.slice(0,5);
