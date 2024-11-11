@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem] text-center" },
-  { name: "Table", uid: "tableNumber" },
+  { name: "Table", uid: "tableNumber"  ,sortable:true},
   {
     name: "Vacant seat",
     uid: "vacantSeat",

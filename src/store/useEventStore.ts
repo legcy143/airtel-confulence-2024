@@ -24,7 +24,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       let res = await axios.get(API_URL + "/airtel/user");
       set({ users: res.data.data });
     } catch (error) {
-      toast.error("Internal server error")
+      toast.error("Internal server error");
     }
   },
   fetchTables: async () => {
@@ -32,7 +32,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       let res = await axios.get(API_URL + "/airtel/table");
       set({ tabels: res.data.data });
     } catch (error) {
-      toast.error("Internal server error")
+      toast.error("Internal server error");
     }
   },
 
@@ -109,4 +109,8 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
     useFeature.getState().resetSwapperData();
     get().fetchUsers();
   },
+
+  removeMember: (_id)=>{
+
+  }
 }));

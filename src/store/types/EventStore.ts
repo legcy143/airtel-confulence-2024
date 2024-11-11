@@ -21,4 +21,5 @@ export interface EventStoreInerface {
   fetchUsers: () => Promise<void>;
   swapMemberSheet: () => void;
   AddNewMember: (data: UserInterface) => void;
+  removeMember: (_id: string) => void;
 }

@@ -6,13 +6,14 @@ import { TableDataWithSequence } from "@/utils/TableData";
 import React, { useCallback, useEffect } from "react";
 import { Tooltip } from "@nextui-org/tooltip";
 import AddNewUserModel from "../_components/AddNewUserModel";
+import { Button } from "@nextui-org/react";
 
 const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem]" },
-  { name: "table.no", uid: "tableNumber", className: " w-[7rem]" },
+  { name: "table.no", uid: "tableNumber", className: " w-[7rem]", sortable:true},
   { name: "name", uid: "name" },
   { name: "email", uid: "email" },
-  { name: "phone number", uid: "phoneNumber" },
+  // { name: "phone number", uid: "phoneNumber" },
   { name: "action", uid: "action" },
 ];
 
@@ -28,16 +29,23 @@ export default function Users() {
   const renderCell = useCallback((event: any, columnKey: any) => {
     const cellValue = event[columnKey];
     switch (columnKey) {
-     
-      case "phoneNumber":
+      case "email":
         return <div>{cellValue ?? "N/A"}</div>;
+      // case "phoneNumber":
+      //   return <div>{cellValue ?? "N/A"}</div>;
       case "action":
         return (
           <div className="py-2 flex items-center gap-4">
-            <Tooltip content="I am a tooltip" className="bg-danger">
-              <DeleteIcon />
+            <Tooltip content="Edit Disbale now">
+              <Button isIconOnly variant="flat" color="primary">
+                <EditIcon />
+              </Button>
             </Tooltip>
-            <EditIcon />
+            <Tooltip content="delete user Disable now" className="bg-danger">
+              <Button isIconOnly variant="flat" color="danger">
+                <DeleteIcon />
+              </Button>
+            </Tooltip>
           </div>
         );
       default:
