@@ -114,8 +114,9 @@ export const UserCard = ({
           </>
         ) : (
           <div>
-            name {data.name} <br />
-            table {data.tableNumber} <br />
+            {/* _id {data?._id?.slice(20,data._id.length)} <br /> */}
+            name {data?.name} <br />
+            table {data?.tableNumber} <br />
           </div>
         )}
       </div>

@@ -9,6 +9,7 @@ import AddNewUserModel from "../_components/AddNewUserModel";
 import { Button } from "@nextui-org/react";
 import DeleteUserModel from "../_components/DeleteUserModel";
 import UpdateUserModel from "../_components/UpdateUserModel.tsx";
+import { toast } from "sonner";
 
 const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem]" },
@@ -33,6 +34,15 @@ export default function Users() {
     }
   }, []);
 
+  const handleCopy = (_id: string) => {
+    try {
+      if (navigator) {
+        navigator.clipboard.writeText(_id);
+        toast.success("coppied "+_id);
+      }
+    } catch (error) {}
+  };
+
   const renderCell = useCallback((event: any, columnKey: any) => {
     const cellValue = event[columnKey];
     switch (columnKey) {
@@ -45,6 +55,9 @@ export default function Users() {
           <div className="py-2 flex items-center gap-4">
             <UpdateUserModel prevData={event} />
             <DeleteUserModel _id={event._id} name={event.name} />
+            <Button onClick={() => handleCopy(event._id ?? "N/A")}>
+              Copy ID
+            </Button>
           </div>
         );
       default:

@@ -6,7 +6,6 @@ import {
 } from "./types/EventStore";
 import { toast } from "sonner";
 import { useFeature } from "./useFetaure";
-import { data } from "framer-motion/client";
 import { swapUsers } from "./helper/SwapUser";
 import axios from "axios";
 
@@ -21,6 +20,8 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
   isUserCreatingLoading: false,
   isUserDeleteLoading: false,
   isUserUpdateLoading: false,
+
+  isSwapUserLoading: false,
 
   isTableFetchLoading: false,
 
@@ -44,6 +45,8 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       set({ tabels: res.data.data });
     } catch (error) {
       toast.error("Internal server error");
+    }
+    finally{
       set({ isTableFetchLoading: false });
     }
   },
@@ -142,25 +145,116 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       set({ isUserCreatingLoading: false });
     }
   },
-  swapMemberSheet: () => {
-    const data: {
-      user1: UserInterface | null;
-      user2: UserInterface | null;
-    } = useFeature.getState().swapUserData;
-    toast.error("swap data was not save in database we fix this soon");
-    if (!data.user1) {
-      return toast.error("Please select user 1 to swap");
-    }
-    if (!data.user2) {
-      return toast.error("Please select user 2 to swap");
-    }
+  swapMemberSheet: async () => {
+    try {
+      const data: {
+        user1: UserInterface | null;
+        user2: UserInterface | null;
+      } = useFeature.getState().swapUserData;
+      toast.error("swap data was not save in database we fix this soon");
+      if (!data.user1) {
+        toast.error("Please select user 1 to swap");
+        return false;
+      }
+      if (!data.user2) {
+        toast.error("Please select user 2 to swap");
+        return false;
+      }
 
-    let prev = [...(get().tabels ?? [])];
-    let updatedValue = swapUsers(prev, data.user1, data.user2);
-    set({ tabels: updatedValue });
-    useFeature.getState().resetSwapperData();
-    get().fetchUsers();
+      let FullTable: TableInterface[] = JSON.parse(
+        JSON.stringify([...(get().tabels ?? [])])
+      );
+      let indF = FullTable.findIndex(
+        (e) => e.tableNumber == data.user1?.tableNumber
+      );
+      let inds = FullTable.findIndex(
+        (e) => e.tableNumber == data.user2?.tableNumber
+      );
+
+      const PrevData1: TableInterface = JSON.parse(
+        JSON.stringify(FullTable[indF])
+      );
+      const PrevData2: TableInterface = JSON.parse(
+        JSON.stringify(FullTable[inds])
+      );
+
+      const t1Data = JSON.parse(JSON.stringify(FullTable[indF]));
+      const t2Data = JSON.parse(JSON.stringify(FullTable[inds]));
+
+      let t1 = t1Data.users.map((e: UserInterface) => {
+        if (e._id == data.user1?._id) {
+          return data.user2?._id;
+        }
+        return e._id;
+      });
+
+      let t2 = t2Data.users.map((e: UserInterface) => {
+        if (e._id == data.user2?._id) {
+          return data.user1?._id;
+        }
+        return e._id;
+      });
+
+      // @ts-ignore
+      t1Data.users = t1;
+      // @ts-ignore
+      t2Data.users = t2;
+
+      const t1Res = await axios.patch(
+        API_URL + "/airtel/table/" + t1Data.tableNumber,
+        t1Data
+      );
+      const t2Res = await axios.patch(
+        API_URL + "/airtel/table/" + t2Data.tableNumber,
+        t2Data
+      );
+
+      try {
+        const userUpdateres1 = await axios.patch(
+          API_URL + "/airtel/user/" + data.user2?._id,
+          {
+            ...data.user1,
+            tableNumber: data.user2?.tableNumber,
+          }
+        );
+        const userUpdateres2 = await axios.patch(
+          API_URL + "/airtel/user/" + data.user1._id,
+          {
+            ...data.user2,
+            tableNumber: data.user1?.tableNumber,
+          }
+        );
+      } catch (error) {
+        // reset changes
+        let p1u = PrevData1.users.map((e) => e._id);
+        let p2u = PrevData2.users.map((e) => e._id);
+
+        const t1Res = await axios.patch(
+          API_URL + "/airtel/table/" + t1Data.tableNumber,
+          {
+            ...PrevData1,
+            users: p1u,
+          }
+        );
+        const t2Res = await axios.patch(
+          API_URL + "/airtel/table/" + t2Data.tableNumber,
+          {
+            ...PrevData2,
+            users: p2u,
+          }
+        );
+      }
+
+      // reset every thing
+      useFeature.getState().resetSwapperData();
+      await get().fetchUsers();
+      await get().fetchTables();
+      return true;
+    } catch (error) {
+      toast.error("something went wrong");
+      return false;
+    } finally {
+      set({ isSwapUserLoading: false });
+    }
   },
-
-  removeMember: (_id) => {},
 }));

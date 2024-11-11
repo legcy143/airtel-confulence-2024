@@ -37,6 +37,7 @@ export default function AddNewUserModel() {
 
   //table from store
   const tabels = useEventStore((s) => s.tabels);
+  const isTableFetchLoading = useEventStore((s) => s.isTableFetchLoading);
   const fetchTables = useEventStore((s) => s.fetchTables);
   const maxUserOnSingleTable = useEventStore((s) => s.maxUserOnSingleTable);
   const AddNewMember = useEventStore((s) => s.AddNewMember);
@@ -63,6 +64,7 @@ export default function AddNewUserModel() {
     let vacantData: vacantSeatTable[] = (tabels ?? [])
       .map((e) => {
         let avilable = maxUserOnSingleTable - e.users.length;
+        console.log(avilable , e)
         if (avilable > 0) {
           let data = {
             _id: e._id,
@@ -81,7 +83,12 @@ export default function AddNewUserModel() {
 
   return (
     <>
-      <Button onPress={handleOpenchange} isLoading={!tabels} color="danger">
+      <Button
+        onPress={handleOpenchange}
+        isDisabled={!tabels}
+        isLoading={isTableFetchLoading}
+        color="danger"
+      >
         Add Members
       </Button>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={resetData}>

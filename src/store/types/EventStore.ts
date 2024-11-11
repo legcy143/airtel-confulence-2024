@@ -19,6 +19,7 @@ export interface EventStoreInerface {
   isUserDeleteLoading: boolean;
   isUserUpdateLoading: boolean;
   isTableFetchLoading: boolean;
+  isSwapUserLoading: boolean;
   tabels: null | TableInterface[];
   users: null | UserInterface[];
   fetchTables: () => Promise<void>;
@@ -29,7 +30,6 @@ export interface EventStoreInerface {
     isToast?: boolean
   ) => Promise<boolean>;
   updateUser: (_id: string, data: UserInterface) => Promise<boolean>;
-  swapMemberSheet: () => void;
+  swapMemberSheet: () => Promise<boolean>;
   AddNewMember: (data: UserInterface) => Promise<boolean>;
-  removeMember: (_id: string) => void;
 }

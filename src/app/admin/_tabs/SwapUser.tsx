@@ -25,3 +25,25 @@ export default function SwapUser() {
     </section>
   );
 }
+
+// {
+//   "tableNumber": 4,
+//   "users": [
+//     "673207d0e71fda86be993cce",
+// "673207d5e71fda86be993d78",
+// "673207d8e71fda86be993df4",
+// "673207d9e71fda86be993e08",
+// "673207dbe71fda86be993e5c"
+//   ]
+// }
+
+// {
+//   "tableNumber": 3,
+//   "users": [
+//     "673207d0e71fda86be993cd2",
+//     "673207dae71fda86be993e32",
+// "673207e0e71fda86be993f1a",
+// "673207e1e71fda86be993f26",
+// "673207e1e71fda86be993f34
+//   ]
+// }
