@@ -83,7 +83,6 @@ export default function AddNewUserModel() {
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         onClose={resetData}
-        scrollBehavior={"inside"}
       >
         <ModalContent>
           {(onClose) => (

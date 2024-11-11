@@ -2,10 +2,11 @@
 import TableUI from "@/components/next-ui/table";
 import { useEventStore } from "@/store/useEventStore";
 import { TableDataWithSequence } from "@/utils/TableData";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { columnInterface } from "@/components/next-ui/table/Table";
 import ViewMemberOnTable from "../_components/ViewMemberOnTable";
 import { Chip } from "@nextui-org/react";
+import Image from "next/image";
 
 export const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem] text-center" },
@@ -21,6 +22,19 @@ export const column: columnInterface[] = [
 export default function Tables() {
   const tabels = useEventStore((s) => s.tabels);
   const maxUserOnSingleTable = useEventStore((s) => s.maxUserOnSingleTable);
+  // const imgDivRef = useRef<HTMLDivElement>(null);
+  // const [imgDimension, setimgDimension] = useState({
+  //   width: 100,
+  //   height: 100,
+  // });
+  // useEffect(() => {
+  //   if (imgDivRef.current) {
+  //     setimgDimension({
+  //       width: imgDivRef.current.offsetWidth,
+  //       height: imgDivRef.current.offsetHeight,
+  //     });
+  //   }
+  // }, []);
 
   const renderCell = useCallback((event: any, columnKey: any) => {
     const cellValue = event[columnKey];
@@ -73,11 +87,12 @@ export default function Tables() {
       />
       <div className="flex-1 p-5">
         <div className=" h-fit max-h-[100%] p-0 overflow-hidden w-fit mx-auto rounded-md">
-          <img
+          {/* <img
             className="object-contain h-full mx-auto"
             src="/assets/hall-layout.jpg"
             alt="img"
-          />
+            loading="eager"
+          /> */}
         </div>
       </div>
     </section>

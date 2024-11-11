@@ -35,7 +35,6 @@ export default function ChooseUserModel({
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
-        scrollBehavior={"inside"}
         onClose={resteFilterData}
       >
         <ModalContent>
