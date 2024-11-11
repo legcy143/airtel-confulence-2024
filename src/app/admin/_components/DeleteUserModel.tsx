@@ -25,12 +25,13 @@ export default function DeleteUserModel({
   //table from store
   const tabels = useEventStore((s) => s.tabels);
   const deleteUser = useEventStore((s) => s.deleteUser);
+  const isUserDeleteLoading = useEventStore((s) => s.isUserDeleteLoading);
 
   let closeBtnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <Tooltip content="delete user Disable now" className="bg-danger">
+      <Tooltip content="delete user" className="bg-danger">
         <Button isIconOnly variant="flat" color="danger" onPress={onOpen}>
           <DeleteIcon />
         </Button>
@@ -57,6 +58,7 @@ export default function DeleteUserModel({
                 </Button>
                 <Button
                   color="danger"
+                  isLoading={isUserDeleteLoading}
                   onClick={async () => {
                     let res = await deleteUser(_id);
                     if (res) {

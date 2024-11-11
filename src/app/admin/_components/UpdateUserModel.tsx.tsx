@@ -1,4 +1,5 @@
 "use client";
+import { EditIcon } from "@/components/Icons";
 import { TableInterface, UserInterface } from "@/store/types/EventStore";
 import { useEventStore } from "@/store/useEventStore";
 import { isValidEmail } from "@/utils/TestRegex";
@@ -15,6 +16,7 @@ import {
   ModalHeader,
   Select,
   SelectItem,
+  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import React, { useEffect, useRef, useState } from "react";
@@ -24,7 +26,11 @@ type vacantSeatTable = {
   _id: string | number;
 } & Pick<TableInterface, "tableNumber" | "_id">;
 
-export default function AddNewUserModel() {
+export default function UpdateUserModel({
+  prevData,
+}: {
+  prevData: UserInterface;
+}) {
   const { onOpen, onOpenChange, onClose, isOpen } = useDisclosure();
   const [data, setdata] = useState<UserInterface>({
     _id: Math.random().toString(),
@@ -33,14 +39,10 @@ export default function AddNewUserModel() {
     phoneNumber: "",
     tableNumber: 0,
   });
-  const [vacantTable, setacantTable] = useState<vacantSeatTable[]>([]);
 
   //table from store
-  const tabels = useEventStore((s) => s.tabels);
-  const fetchTables = useEventStore((s) => s.fetchTables);
-  const maxUserOnSingleTable = useEventStore((s) => s.maxUserOnSingleTable);
-  const AddNewMember = useEventStore((s) => s.AddNewMember);
-  const isUserCreatingLoading = useEventStore((s) => s.isUserCreatingLoading);
+  const updateUser = useEventStore((s) => s.updateUser);
+  const isUserUpdateLoading = useEventStore((s) => s.isUserUpdateLoading);
 
   const handleChange = (key: keyof UserInterface, value: string | number) => {
     setdata((prev) => ({
@@ -56,72 +58,47 @@ export default function AddNewUserModel() {
       phoneNumber: "",
       tableNumber: 0,
     });
-    setacantTable([]);
   };
   const handleOpenchange = async () => {
     onOpen();
-    let vacantData: vacantSeatTable[] = (tabels ?? [])
-      .map((e) => {
-        let avilable = maxUserOnSingleTable - e.users.length;
-        if (avilable > 0) {
-          let data = {
-            _id: e._id,
-            avilable,
-            tableNumber: e.tableNumber,
-          };
-          return data;
-        }
-        return null;
-      })
-      ?.filter((e) => e != null);
-    setacantTable(vacantData);
+    setdata({
+      _id: prevData._id,
+      email: prevData.email,
+      name: prevData.name,
+      phoneNumber: prevData.phoneNumber,
+      tableNumber: prevData.tableNumber,
+    });
   };
 
   let closeBtnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
-      <Button onPress={handleOpenchange} isLoading={!tabels} color="danger">
-        Add Members
-      </Button>
+      <Tooltip content="Edit Disbale now">
+        <Button
+          isIconOnly
+          variant="flat"
+          color="primary"
+          onPress={handleOpenchange}
+        >
+          <EditIcon />
+        </Button>
+      </Tooltip>
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={resetData}>
         <ModalContent>
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                <span>Add New Member</span>
-                <Breadcrumbs
-                  itemClasses={{
-                    item: [
-                      "data-[current=true]:text-danger",
-                      "data-[disabled=true]:text-default-500",
-                    ],
-                  }}
-                  className="font-normal opacity-90 capitalize"
-                >
-                  <BreadcrumbItem isCurrent={!data.tableNumber}>
-                    table number
-                  </BreadcrumbItem>
-                  <BreadcrumbItem isCurrent={!!data.tableNumber}>
-                    member detail
-                  </BreadcrumbItem>
-                </Breadcrumbs>
+                <span>Update {prevData.name} Data</span>
               </ModalHeader>
               <ModalBody>
-                <Select
-                  label="Table"
-                  placeholder="Select Table Number"
-                  description="select table from avilable table"
-                  onChange={(e) => {
-                    handleChange("tableNumber", e.target.value);
-                  }}
-                >
-                  {vacantTable.map((e) => (
-                    <SelectItem key={e.tableNumber}>
-                      {e.tableNumber?.toString()}
-                    </SelectItem>
-                  ))}
-                </Select>
+                <Input
+                  isDisabled
+                  label="Table Number"
+                  isRequired={true}
+                  placeholder="Enter Member Name"
+                  value={prevData.tableNumber?.toString()}
+                />
                 {data.tableNumber ? (
                   <>
                     <Input
@@ -157,17 +134,16 @@ export default function AddNewUserModel() {
                   Close
                 </Button>
                 <Button
+                  isLoading={isUserUpdateLoading}
                   color="danger"
-                  isDisabled={!data.tableNumber}
-                  isLoading={isUserCreatingLoading}
                   onClick={async () => {
-                    let res = await AddNewMember(data);
+                    let res = await updateUser(prevData._id, data);
                     if (res) {
                       closeBtnRef.current?.click();
                     }
                   }}
                 >
-                  Add
+                  update
                 </Button>
               </ModalFooter>
             </>

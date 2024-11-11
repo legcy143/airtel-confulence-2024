@@ -8,6 +8,7 @@ import { Tooltip } from "@nextui-org/tooltip";
 import AddNewUserModel from "../_components/AddNewUserModel";
 import { Button } from "@nextui-org/react";
 import DeleteUserModel from "../_components/DeleteUserModel";
+import UpdateUserModel from "../_components/UpdateUserModel.tsx";
 
 const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem]" },
@@ -42,11 +43,7 @@ export default function Users() {
       case "action":
         return (
           <div className="py-2 flex items-center gap-4">
-            <Tooltip content="Edit Disbale now">
-              <Button isIconOnly variant="flat" color="primary">
-                <EditIcon />
-              </Button>
-            </Tooltip>
+            <UpdateUserModel prevData={event} />
             <DeleteUserModel _id={event._id} name={event.name} />
           </div>
         );

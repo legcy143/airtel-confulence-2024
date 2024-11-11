@@ -19,6 +19,8 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
 
   isUserFetchLoading: false,
   isUserCreatingLoading: false,
+  isUserDeleteLoading: false,
+  isUserUpdateLoading: false,
 
   isTableFetchLoading: false,
 
@@ -46,10 +48,26 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
     }
   },
 
-  updateUser: async (_id, data) => {},
+  updateUser: async (_id, data) => {
+    try {
+      set({ isUserUpdateLoading: true });
+      const { _id, tableNumber, ...reqbody } = data;
+      const res = await axios.patch(API_URL + "/airtel/user/" + _id, reqbody);
+      await get().fetchUsers();
+      await get().fetchTables();
+      toast.success("user updated successfully");
+      return true;
+    } catch (error) {
+      toast.error("something went wrong");
+      return false;
+    } finally {
+      set({ isUserUpdateLoading: false });
+    }
+  },
 
   deleteUser: async (_id, isRemoveFromTable = true, isToast = true) => {
     try {
+      set({ isUserDeleteLoading: true });
       let deluserRes = await axios.delete(API_URL + "/airtel/user/" + _id);
       await get().fetchUsers();
       let tableNumber = deluserRes.data.data?.tableNumber;
@@ -68,11 +86,13 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
         API_URL + "/airtel/table/" + tableNumber,
         tableBody
       );
-      if (isToast) toast.warning("user Deleted Successfully");
+      if (isToast) toast.success("user Deleted Successfully");
       return true;
     } catch (error) {
       toast.error("Something went wrong");
       return false;
+    } finally {
+      set({ isUserDeleteLoading: false });
     }
   },
 
