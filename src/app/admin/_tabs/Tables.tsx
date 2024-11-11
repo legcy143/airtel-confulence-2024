@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem] text-center" },
-  { name: "Table", uid: "tablenumber" },
+  { name: "Table", uid: "tableNumber" },
   {
     name: "Vacant seat",
     uid: "vacantSeat",
@@ -22,19 +22,7 @@ export const column: columnInterface[] = [
 export default function Tables() {
   const tabels = useEventStore((s) => s.tabels);
   const maxUserOnSingleTable = useEventStore((s) => s.maxUserOnSingleTable);
-  // const imgDivRef = useRef<HTMLDivElement>(null);
-  // const [imgDimension, setimgDimension] = useState({
-  //   width: 100,
-  //   height: 100,
-  // });
-  // useEffect(() => {
-  //   if (imgDivRef.current) {
-  //     setimgDimension({
-  //       width: imgDivRef.current.offsetWidth,
-  //       height: imgDivRef.current.offsetHeight,
-  //     });
-  //   }
-  // }, []);
+
 
   const renderCell = useCallback((event: any, columnKey: any) => {
     const cellValue = event[columnKey];
@@ -44,7 +32,7 @@ export default function Tables() {
       case "vacantSeat":
         return (
           <span className="opacity-90 font-normal flex justify-center">
-            {event?.users?.length &&
+            {event?.users?.length != undefined ?
             maxUserOnSingleTable - event?.users?.length > 0 ? (
               <Chip color="warning" variant="flat">
                 {maxUserOnSingleTable - event?.users?.length} vacant
@@ -53,10 +41,10 @@ export default function Tables() {
               <Chip color="success" variant="flat">
                 {event?.users?.length}/{maxUserOnSingleTable} Full
               </Chip>
-            )}
+            ):"error"}
           </span>
         );
-      case "tablenumber":
+      case "tableNumber":
         return (
           <span className="w-[20rem] opacity-90 font-normal">
             {"Table#" + cellValue}
@@ -87,12 +75,12 @@ export default function Tables() {
       />
       <div className="flex-1 p-5">
         <div className=" h-fit max-h-[100%] p-0 overflow-hidden w-fit mx-auto rounded-md">
-          {/* <img
+          <img
             className="object-contain h-full mx-auto"
             src="/assets/hall-layout.jpg"
             alt="img"
             loading="eager"
-          /> */}
+          />
         </div>
       </div>
     </section>

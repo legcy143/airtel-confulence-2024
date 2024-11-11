@@ -1,6 +1,7 @@
-"use client"
+"use client";
 import { TableInterface, UserInterface } from "@/store/types/EventStore";
 import { useEventStore } from "@/store/useEventStore";
+import { isValidEmail } from "@/utils/TestRegex";
 import { Icon } from "@iconify/react/dist/iconify.js";
 import {
   BreadcrumbItem,
@@ -21,7 +22,7 @@ import React, { useEffect, useState } from "react";
 type vacantSeatTable = {
   avilable: number;
   _id: string | number;
-} & Pick<TableInterface, "tablenumber" | "_id">;
+} & Pick<TableInterface, "tableNumber" | "_id">;
 
 export default function AddNewUserModel() {
   const { onOpen, onOpenChange, onClose, isOpen } = useDisclosure();
@@ -35,28 +36,9 @@ export default function AddNewUserModel() {
 
   //table from store
   const tabels = useEventStore((s) => s.tabels);
+  const fetchTables = useEventStore((s) => s.fetchTables);
   const maxUserOnSingleTable = useEventStore((s) => s.maxUserOnSingleTable);
   const AddNewMember = useEventStore((s) => s.AddNewMember);
-
-  useEffect(() => {
-    if (tabels) {
-      let vacantData: vacantSeatTable[] = tabels
-        .map((e) => {
-          let avilable = maxUserOnSingleTable - e.users.length;
-          if (avilable > 0) {
-            let data = {
-              _id: e._id,
-              avilable,
-              tablenumber: e.tablenumber,
-            };
-            return data;
-          }
-          return null;
-        })
-        ?.filter((e) => e != null);
-      setacantTable(vacantData);
-    }
-  }, []);
 
   const handleChange = (key: keyof UserInterface, value: string | number) => {
     setdata((prev) => ({
@@ -73,17 +55,31 @@ export default function AddNewUserModel() {
     });
     setacantTable([]);
   };
+  const handleOpenchange = async () => {
+    onOpen();
+    let vacantData: vacantSeatTable[] = (tabels ?? [])
+      .map((e) => {
+        let avilable = maxUserOnSingleTable - e.users.length;
+        if (avilable > 0) {
+          let data = {
+            _id: e._id,
+            avilable,
+            tableNumber: e.tableNumber,
+          };
+          return data;
+        }
+        return null;
+      })
+      ?.filter((e) => e != null);
+    setacantTable(vacantData);
+  };
 
   return (
     <>
-      <Button onPress={onOpen} color="danger">
+      <Button onPress={handleOpenchange} isLoading={!tabels} color="danger">
         Add Members
       </Button>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        onClose={resetData}
-      >
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} onClose={resetData}>
         <ModalContent>
           {(onClose) => (
             <>
@@ -116,8 +112,8 @@ export default function AddNewUserModel() {
                   }}
                 >
                   {vacantTable.map((e) => (
-                    <SelectItem key={e.tablenumber}>
-                      {e.tablenumber.toString()}
+                    <SelectItem key={e.tableNumber}>
+                      {e.tableNumber?.toString()}
                     </SelectItem>
                   ))}
                 </Select>
@@ -135,6 +131,7 @@ export default function AddNewUserModel() {
                       label="Email"
                       placeholder="Enter Member Email"
                       value={data.email}
+                      isInvalid={isValidEmail(data.email)}
                       onChange={(e) => {
                         handleChange("email", e.target.value);
                       }}

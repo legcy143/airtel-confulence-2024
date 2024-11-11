@@ -7,7 +7,7 @@ export interface UserInterface {
 
 export interface TableInterface {
   _id: string | number;
-  tablenumber: number;
+  tableNumber: number;
   users: UserInterface[];
 }
 
@@ -16,7 +16,7 @@ export interface EventStoreInerface {
   isFetchLoading: boolean;
   tabels: null | TableInterface[];
   users: null | UserInterface[];
-  fetchTables: () => void;
+  fetchTables: () => Promise<void>;
   fetchUsers: () => Promise<void>;
   swapMemberSheet: () => void;
   AddNewMember: (data: UserInterface) => void;

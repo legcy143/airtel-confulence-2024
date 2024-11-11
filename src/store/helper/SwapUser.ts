@@ -6,10 +6,10 @@ export function swapUsers(
   user2: UserInterface
 ) {
   const tableIndex1 = prevTable.findIndex(
-    (table) => table.tablenumber === user1.tableNumber
+    (table) => table.tableNumber === user1.tableNumber
   );
   const tableIndex2 = prevTable.findIndex(
-    (table) => table.tablenumber === user2.tableNumber
+    (table) => table.tableNumber === user2.tableNumber
   );
   if (tableIndex1 === -1 || tableIndex2 === -1) {
     console.error("One or both tables not found");
