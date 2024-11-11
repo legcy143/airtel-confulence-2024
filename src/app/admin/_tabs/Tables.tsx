@@ -33,7 +33,7 @@ export default function Tables() {
             {event?.users?.length &&
             maxUserOnSingleTable - event?.users?.length > 0 ? (
               <Chip color="warning" variant="flat">
-                {maxUserOnSingleTable - event?.users?.length} seats
+                {maxUserOnSingleTable - event?.users?.length} vacant
               </Chip>
             ) : (
               <Chip color="success" variant="flat">
