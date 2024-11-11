@@ -60,7 +60,7 @@ export default function page() {
             placeholder="Name or Email ..."
             autoComplete="off"
             onFocus={() => setisDropVisible(true)}
-            onBlur={() => handleBlur(100)}
+            onBlur={() => handleBlur(200)}
             isDisabled={isUserFetchLoading}
             onChange={(e) => {
               if (!isDropVisible) {
@@ -70,42 +70,48 @@ export default function page() {
             }}
           />
           {/* Dropdown list */}
-          {isDropVisible && (
-            <div className="absolute top-[3.5rem] w-full rounded-md shadow-lg z-10 bg-default">
-              {!filteredData?.length && (
-                <p className="text-center p-2 capitalize">
-                  {isUserFetchLoading ? "loading..." : "no result found"}
-                </p>
-              )}
-              <ul className="max-h-60 overflow-y-auto">
-                {filteredData?.map((user, index) => (
-                  <li
-                    key={index}
-                    className="px-4 py-2 flex items-center gap-3 cursor-pointer"
-                    onClick={(e) => {
-                      setselectedProfile(user);
-                    }}
-                  >
-                    <span>{user?.name}</span>
-                    <span className="text-sm opacity-80">({user?.email})</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <div
+            className={`absolute top-[3.5rem] transition-all transform origin-top  w-full rounded-md shadow-lg z-10 bg-default ${
+              isDropVisible ? "scale-y-100" : "scale-y-0"
+            }`}
+          >
+            {!filteredData?.length && (
+              <p className="text-center p-2 capitalize">
+                {isUserFetchLoading ? "loading..." : "no result found"}
+              </p>
+            )}
+            <ul className="max-h-60 overflow-y-auto">
+              {filteredData?.map((user, index) => (
+                <li
+                  key={index}
+                  className="px-4 py-2 flex items-center gap-3 cursor-pointer active:bg-danger-200"
+                  onClick={(e) => {
+                    setselectedProfile(user);
+                  }}
+                >
+                  <span>{user?.name}</span>
+                  {user?.email ? (
+                    <span className="text-sm opacity-80">({user.email})</span>
+                  ) : (
+                    ""
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
         {selectedProfile && (
           <>
             <Card data={selectedProfile} />
-            <div className="h-fit p-0 mb-3 overflow-hidden w-fit mx-auto rounded-md">
-              <img
-                className="object-contain h-full w-fit mx-auto"
-                src="/assets/hall-layout.jpg"
-                alt="img"
-              />
-            </div>
           </>
         )}
+        <div className="h-fit max-w-[90%] p-0 mb-3 overflow-hidden w-fit mx-auto rounded-md">
+          <img
+            className="object-contain h-full w-fit mx-auto"
+            src="/assets/hall-layout.jpg"
+            alt="img"
+          />
+        </div>
       </main>
     </main>
   );

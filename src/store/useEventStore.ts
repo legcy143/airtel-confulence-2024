@@ -35,6 +35,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       set({ users: res.data.data });
     } catch (error) {
       toast.error("Internal server error");
+    } finally {
       set({ isUserFetchLoading: false });
     }
   },
@@ -45,8 +46,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       set({ tabels: res.data.data });
     } catch (error) {
       toast.error("Internal server error");
-    }
-    finally{
+    } finally {
       set({ isTableFetchLoading: false });
     }
   },
