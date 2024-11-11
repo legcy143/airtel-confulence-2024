@@ -17,7 +17,7 @@ import {
   SelectItem,
   useDisclosure,
 } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 type vacantSeatTable = {
   avilable: number;
@@ -40,6 +40,7 @@ export default function AddNewUserModel() {
   const fetchTables = useEventStore((s) => s.fetchTables);
   const maxUserOnSingleTable = useEventStore((s) => s.maxUserOnSingleTable);
   const AddNewMember = useEventStore((s) => s.AddNewMember);
+  const isUserCreatingLoading = useEventStore((s) => s.isUserCreatingLoading);
 
   const handleChange = (key: keyof UserInterface, value: string | number) => {
     setdata((prev) => ({
@@ -75,6 +76,8 @@ export default function AddNewUserModel() {
       ?.filter((e) => e != null);
     setacantTable(vacantData);
   };
+
+  let closeBtnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
@@ -134,7 +137,7 @@ export default function AddNewUserModel() {
                       label="Email"
                       placeholder="Enter Member Email"
                       value={data.email}
-                      isInvalid={isValidEmail(data.email)}
+                      isInvalid={!!data.email && !isValidEmail(data.email)}
                       onChange={(e) => {
                         handleChange("email", e.target.value);
                       }}
@@ -145,14 +148,23 @@ export default function AddNewUserModel() {
                 )}
               </ModalBody>
               <ModalFooter>
-                <Button color="danger" variant="flat" onPress={onClose}>
+                <Button
+                  color="danger"
+                  ref={closeBtnRef}
+                  variant="flat"
+                  onPress={onClose}
+                >
                   Close
                 </Button>
                 <Button
                   color="danger"
-                  isDisabled={!data.tableNumber}
-                  onClick={() => AddNewMember(data)}
-                  onPress={onClose}
+                  isDisabled={(!data.tableNumber || isUserCreatingLoading)}
+                  onClick={async () => {
+                    let res = await AddNewMember(data);
+                    if (res) {
+                      closeBtnRef.current?.click();
+                    }
+                  }}
                 >
                   Add
                 </Button>

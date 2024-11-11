@@ -16,7 +16,12 @@ let API_URL = "https://api-new.gokapturehub.com";
 export const useEventStore = create<EventStoreInerface>((set, get) => ({
   isFetchLoading: false,
   maxUserOnSingleTable: 6,
+
   isUserFetchLoading: false,
+  isUserCreatingLoading: false,
+
+  isTableFetchLoading: false,
+
   users: null,
   tabels: null,
 
@@ -32,16 +37,51 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
   },
   fetchTables: async () => {
     try {
+      set({ isTableFetchLoading: true });
       let res = await axios.get(API_URL + "/airtel/table");
       set({ tabels: res.data.data });
     } catch (error) {
       toast.error("Internal server error");
+      set({ isTableFetchLoading: false });
+    }
+  },
+
+  updateUser: async (_id, data) => {},
+
+  deleteUser: async (_id, isRemoveFromTable = true, isToast = true) => {
+    try {
+      let deluserRes = await axios.delete(API_URL + "/airtel/user/" + _id);
+      await get().fetchUsers();
+      let tableNumber = deluserRes.data.data?.tableNumber;
+      const prevTableData = [...(get().tabels ?? [])];
+      let tableBody = prevTableData.find((e) => e.tableNumber == tableNumber);
+      if (!tableBody || !isRemoveFromTable) {
+        return true;
+      }
+      let filteruser = tableBody?.users
+        ?.filter((e) => e._id != _id)
+        ?.map((e) => e._id);
+      // @ts-ignore
+      tableBody.users = filteruser;
+
+      let updateTable = await axios.patch(
+        API_URL + "/airtel/table/" + tableNumber,
+        tableBody
+      );
+      if (isToast) toast.warning("user Deleted Successfully");
+      return true;
+    } catch (error) {
+      toast.error("Something went wrong");
+      return false;
     }
   },
 
   AddNewMember: async (data) => {
     try {
+      set({ isUserCreatingLoading: true });
       const { _id, ...reqbody } = data;
+      if (typeof reqbody.tableNumber == "string")
+        reqbody.tableNumber = parseInt(reqbody.tableNumber);
       let createUserRes = await axios.post(API_URL + "/airtel/user", reqbody);
       let newuser: UserInterface = createUserRes.data.data;
 
@@ -51,47 +91,36 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       );
 
       if (!tableBody) {
-        toast.error("somethign went wrong");
-        return;
+        toast.error("something went wrong");
+        return false;
       }
       let newUserIds = tableBody.users.map((e) => e._id);
       newUserIds.push(newuser._id);
       // @ts-ignore
       tableBody.users = newUserIds;
+      if (typeof tableBody.tableNumber == "string")
+        tableBody.tableNumber = parseInt(tableBody.tableNumber);
 
-      let updateTable = await axios.post(
-        API_URL + "/airtel/table" + newuser.tableNumber,
-        tableBody
-      );
-      get().fetchTables();
-      get().fetchUsers();
-      toast.success("User created sucessfully");
-    } catch (error) {}
-  },
-
-  updateTable: async () => {
-    let users = get().users ?? [];
-    let table: { tableNumber: number; users: string[] }[] = [];
-    for (let i = 0; i < users.length; i++) {
-      let currentUser = users[i];
-      let checktable = table.find(
-        (e) => e.tableNumber == currentUser.tableNumber
-      );
-      if (checktable) {
-        checktable.users.push(currentUser._id);
-      } else {
-        table.push({
-          tableNumber: currentUser.tableNumber as number,
-          users: [currentUser._id],
-        });
+      console.log("tableBody ", tableBody);
+      try {
+        let updateTable = await axios.patch(
+          API_URL + "/airtel/table/" + newuser.tableNumber,
+          tableBody
+        );
+        await get().fetchTables();
+        await get().fetchUsers();
+        toast.success("User created sucessfully");
+        return true;
+      } catch (error) {
+        get().deleteUser(newuser._id, false, false);
+        return false;
       }
+    } catch (error) {
+      toast.error("Internal Server Error");
+      return false;
+    } finally {
+      set({ isUserCreatingLoading: false });
     }
-    for (let i = 0; i < table.length; i++) {
-      let currentTable = table[i];
-      console.log(currentTable);
-      await axios.post(API_URL + "/airtel/table", currentTable);
-    }
-    // console.log("table ", table);
   },
   swapMemberSheet: () => {
     const data: {

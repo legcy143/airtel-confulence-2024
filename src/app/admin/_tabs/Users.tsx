@@ -7,10 +7,16 @@ import React, { useCallback, useEffect } from "react";
 import { Tooltip } from "@nextui-org/tooltip";
 import AddNewUserModel from "../_components/AddNewUserModel";
 import { Button } from "@nextui-org/react";
+import DeleteUserModel from "../_components/DeleteUserModel";
 
 const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem]" },
-  { name: "table.no", uid: "tableNumber", className: " w-[7rem]", sortable:true},
+  {
+    name: "table.no",
+    uid: "tableNumber",
+    className: " w-[7rem]",
+    sortable: true,
+  },
   { name: "name", uid: "name" },
   { name: "email", uid: "email" },
   // { name: "phone number", uid: "phoneNumber" },
@@ -31,8 +37,8 @@ export default function Users() {
     switch (columnKey) {
       case "email":
         return <div>{cellValue ?? "N/A"}</div>;
-      // case "phoneNumber":
-      //   return <div>{cellValue ?? "N/A"}</div>;
+      case "name":
+        return <div className="min-w-[10rem]"> {cellValue ?? "N/A"}</div>;
       case "action":
         return (
           <div className="py-2 flex items-center gap-4">
@@ -41,11 +47,7 @@ export default function Users() {
                 <EditIcon />
               </Button>
             </Tooltip>
-            <Tooltip content="delete user Disable now" className="bg-danger">
-              <Button isIconOnly variant="flat" color="danger">
-                <DeleteIcon />
-              </Button>
-            </Tooltip>
+            <DeleteUserModel _id={event._id} name={event.name} />
           </div>
         );
       default:

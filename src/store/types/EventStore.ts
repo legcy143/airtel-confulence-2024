@@ -14,13 +14,16 @@ export interface TableInterface {
 
 export interface EventStoreInerface {
   maxUserOnSingleTable: number;
-  isFetchLoading: boolean;
-  isUserFetchLoading:boolean;
+  isUserCreatingLoading: boolean;
+  isUserFetchLoading: boolean;
+  isTableFetchLoading: boolean;
   tabels: null | TableInterface[];
   users: null | UserInterface[];
   fetchTables: () => Promise<void>;
   fetchUsers: () => Promise<void>;
+  deleteUser: (_id: string ,isRemoveFromTable?:boolean, isToast?:boolean) => Promise<boolean>;
+  updateUser: (_id: string, data: UserInterface) => void;
   swapMemberSheet: () => void;
-  AddNewMember: (data: UserInterface) => void;
+  AddNewMember: (data: UserInterface) => Promise<boolean>;
   removeMember: (_id: string) => void;
 }

@@ -11,7 +11,7 @@ export default function page() {
   const filteredData = useFeature((s) => s.filteredData);
   const SearchUser = useFeature((s) => s.SearchUser);
   const resteFilterData = useFeature((s) => s.resteFilterData);
-  const isFetchLoading = useEventStore((s) => s.isFetchLoading);
+  const isUserFetchLoading = useEventStore((s) => s.isUserFetchLoading);
   const fetchUsers = useEventStore((s) => s.fetchUsers);
   const users = useEventStore((s) => s.users);
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function page() {
             autoComplete="off"
             onFocus={() => setisDropVisible(true)}
             onBlur={() => handleBlur(100)}
-            isDisabled={isFetchLoading}
+            isDisabled={isUserFetchLoading}
             onChange={(e) => {
               if (!isDropVisible) {
                 setisDropVisible(true);
@@ -74,7 +74,7 @@ export default function page() {
             <div className="absolute top-[3.5rem] w-full rounded-md shadow-lg z-10 bg-default">
               {!filteredData?.length && (
                 <p className="text-center p-2 capitalize">
-                  {isFetchLoading ? "loading..." : "no result found"}
+                  {isUserFetchLoading ? "loading..." : "no result found"}
                 </p>
               )}
               <ul className="max-h-60 overflow-y-auto">
