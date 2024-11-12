@@ -10,7 +10,12 @@ import Image from "next/image";
 
 export const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem] text-center" },
-  { name: "table", uid: "name", sortable: true  },
+  {
+    name: "table",
+    uid: "tableNumber",
+    className: "w-[10rem]",
+    sortable: true,
+  },
   {
     name: "Vacant seat",
     uid: "vacantSeat",
@@ -47,10 +52,12 @@ export default function Tables() {
             )}
           </span>
         );
-      case "name":
+      case "tableNumber":
         return (
-          <span className="w-[20rem] opacity-90 font-normal">
-            {"Table#" + event?.tableNumber}
+          <span className="w-[25rem] opacity-90 font-normal">
+            {cellValue?.toString() == "0"
+              ? "Theater seat"
+              : "Table#" + cellValue}
           </span>
         );
       case "member":
