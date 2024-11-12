@@ -108,7 +108,7 @@ export default function page() {
             <Card data={selectedProfile} />
           </>
         )}
-        <div className="h-fit max-w-[90%] p-0 mb-3 overflow-hidden w-fit mx-auto rounded-md">
+        <div className="h-fit max-w-[90%] p-0 mb-3 overflow-hidden w-fit mx-auto rounded-md ">
           <img
             className="object-contain h-full w-fit mx-auto"
             src="/assets/hall-layout.jpg"

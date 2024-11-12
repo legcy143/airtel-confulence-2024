@@ -1,4 +1,5 @@
 "use client";
+import SwitchUI from "@/components/next-ui/Switch";
 import { TableInterface, UserInterface } from "@/store/types/EventStore";
 import { useEventStore } from "@/store/useEventStore";
 import { isValidEmail } from "@/utils/TestRegex";
@@ -18,6 +19,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import React, { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 type vacantSeatTable = {
   avilable: number;
@@ -64,7 +66,7 @@ export default function AddNewUserModel() {
     let vacantData: vacantSeatTable[] = (tabels ?? [])
       .map((e) => {
         let avilable = maxUserOnSingleTable - e.users.length;
-        console.log(avilable , e)
+        console.log(avilable, e);
         if (avilable > 0) {
           let data = {
             _id: e._id,
@@ -106,30 +108,49 @@ export default function AddNewUserModel() {
                   }}
                   className="font-normal opacity-90 capitalize"
                 >
-                  <BreadcrumbItem isCurrent={!data.tableNumber}>
+                  <BreadcrumbItem isCurrent={false}>
                     table number
                   </BreadcrumbItem>
-                  <BreadcrumbItem isCurrent={!!data.tableNumber}>
+                  <BreadcrumbItem isCurrent={true}>
                     member detail
                   </BreadcrumbItem>
                 </Breadcrumbs>
               </ModalHeader>
               <ModalBody>
-                <Select
-                  label="Table"
-                  placeholder="Select Table Number"
-                  description="select table from avilable table"
-                  onChange={(e) => {
-                    handleChange("tableNumber", e.target.value);
-                  }}
-                >
-                  {vacantTable.map((e) => (
-                    <SelectItem key={e.tableNumber}>
-                      {e.tableNumber?.toString()}
-                    </SelectItem>
-                  ))}
-                </Select>
-                {data.tableNumber ? (
+                {data.tableNumber?.toString() == "0" ? (
+                  <SwitchUI
+                    label="Theater seat"
+                    description="Selcted means user have no seat in table"
+                    checked={data.tableNumber?.toString() == "0"}
+                    onChange={() => {
+                      let seatNumber: number | undefined =
+                        vacantTable[0]?.tableNumber;
+                      if (seatNumber) handleChange("tableNumber", seatNumber);
+                      else {
+                        toast.error("No seats avilable");
+                      }
+                    }}
+                  />
+                ) : (
+                  <Select
+                    label="Table"
+                    placeholder="Select Table Number"
+                    description="select table from avilable table"
+                    selectedKeys={
+                      data.tableNumber ? [data.tableNumber.toString()] : []
+                    }
+                    onChange={(e) => {
+                      handleChange("tableNumber", e.target.value);
+                    }}
+                  >
+                    {vacantTable.map((e) => (
+                      <SelectItem key={e.tableNumber}>
+                        {e.tableNumber?.toString()}
+                      </SelectItem>
+                    ))}
+                  </Select>
+                )}
+                {data.tableNumber != undefined ? (
                   <>
                     <Input
                       label="Name"
@@ -165,7 +186,7 @@ export default function AddNewUserModel() {
                 </Button>
                 <Button
                   color="danger"
-                  isDisabled={!data.tableNumber}
+                  isDisabled={!data.name}
                   isLoading={isUserCreatingLoading}
                   onClick={async () => {
                     let res = await AddNewMember(data);
