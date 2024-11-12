@@ -57,7 +57,10 @@ export default function page() {
             startContent={<Icon icon="ic:round-search" />}
             label="Search Seat"
             description="Search your seat by email or name"
-            placeholder="Name or Email ..."
+            // placeholder="Name or Email ..."
+            placeholder={`${
+              isUserFetchLoading ? "loading..." : "Name or email"
+            }`}
             autoComplete="off"
             onFocus={() => setisDropVisible(true)}
             onBlur={() => handleBlur(200)}
