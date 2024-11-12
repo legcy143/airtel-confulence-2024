@@ -79,6 +79,7 @@ export default function Tables() {
         selectionMode="none"
         statusOptions={[]}
         title="Tables"
+        searchBy="tableNumber"
         isLoading={isTableFetchLoading}
         loadingCell={[1, 2, 3, 4, 5]?.map((e) => (
           <div key={e} className="flex  gap-2 my-2">

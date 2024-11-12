@@ -20,6 +20,7 @@ import {
   Select,
   SelectItem,
   TableVariantProps,
+  Divider,
 } from "@nextui-org/react";
 import {
   ChevronDownIcon,
@@ -72,6 +73,7 @@ interface TableProps {
   setNumberOfDataPerPage?: (num: number) => void;
   varients?: TableVariantProps;
   loadingCell?: React.ReactNode;
+  searchBy?: string;
 }
 
 export default function TableUI({
@@ -99,6 +101,7 @@ export default function TableUI({
   varients = {
     color: "danger",
   },
+  searchBy = "Name",
 }: TableProps) {
   const GetInitialVisibleColumns = React.useMemo(() => {
     let arr: string[] = [];
@@ -107,6 +110,7 @@ export default function TableUI({
     });
     return arr;
   }, [columns]);
+
   const INITIAL_VISIBLE_COLUMNS_LOCAL =
     INITIAL_VISIBLE_COLUMNS || GetInitialVisibleColumns;
 
@@ -143,7 +147,10 @@ export default function TableUI({
 
     if (hasSearchFilter) {
       filteredUsers = filteredUsers.filter((data) =>
-        data?.name?.toLowerCase()?.includes(filterValue?.toLowerCase())
+        data?.[searchBy]
+          ?.toString()
+          ?.toLowerCase()
+          ?.includes(filterValue?.toLowerCase())
       );
     }
     if (
@@ -234,7 +241,7 @@ export default function TableUI({
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
-            placeholder="Search by name..."
+            placeholder={`Search by ${searchBy}...`}
             startContent={<SearchIcon />}
             value={filterValue}
             onClear={() => onClear()}
@@ -461,12 +468,14 @@ export default function TableUI({
         items={sortedItems}
       >
         {(item) => (
-          <TableRow key={item._id}>
+          <TableRow  key={item._id}>
             {(columnKey) => (
               <TableCell key={`${item._id}-${columnKey}`}>
-                {renderCell
-                  ? renderCell(item, columnKey)
-                  : getKeyValue(item, columnKey)}
+                <>
+                  {renderCell
+                    ? renderCell(item, columnKey)
+                    : getKeyValue(item, columnKey)}
+                </>
               </TableCell>
             )}
           </TableRow>

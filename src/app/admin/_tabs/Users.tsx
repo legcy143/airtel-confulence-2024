@@ -53,7 +53,7 @@ export default function Users() {
         return <div className="min-w-[10rem] font-medium"> {cellValue ?? "N/A"}</div>;
       case "action":
         return (
-          <div className="py-2 flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <UpdateUserModel prevData={event} />
             <DeleteUserModel _id={event._id} name={event.name} />
             <Button onClick={() => handleCopy(event._id ?? "N/A")}>
