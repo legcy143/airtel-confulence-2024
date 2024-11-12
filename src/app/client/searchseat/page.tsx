@@ -93,11 +93,11 @@ export default function page() {
                   }}
                 >
                   <span>{user?.name}</span>
-                  {user?.email ? (
+                  {/* {user?.email ? (
                     <span className="text-sm opacity-80">({user.email})</span>
                   ) : (
                     ""
-                  )}
+                  )} */}
                 </li>
               ))}
             </ul>
@@ -134,7 +134,7 @@ const Card = ({ data }: { data: UserInterface }) => {
         )}
         <div className="text-xs w-full truncate flex flex-col p-2 text-center">
           <span>{data?.name}</span>
-          <span className="opacity-70">{data?.email ?? "N/A"}</span>
+          {/* <span className="opacity-70">{data?.email ?? "N/A"}</span> */}
         </div>
       </div>
       <div className="absolute w-56 h-48 bg-white blur-[50px] -left-1/2 -top-1/2"></div>
