@@ -74,7 +74,7 @@ export default function UpdateUserModel({
 
   return (
     <>
-      <Tooltip content="Edit Disbale now">
+      <Tooltip content="Edit">
         <Button
           isIconOnly
           variant="flat"
