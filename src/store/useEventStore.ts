@@ -154,7 +154,6 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
 
       let backupUserData = JSON.parse(JSON.stringify(data));
 
-      toast.error("swap data was not save in database we fix this soon");
       if (!data.user1) {
         toast.error("Please select user 1 to swap");
         return false;

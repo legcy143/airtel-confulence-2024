@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem] text-center" },
-  { name: "Table", uid: "tableNumber"  ,sortable:true},
+  { name: "Table", uid: "name", sortable: true },
   {
     name: "Vacant seat",
     uid: "vacantSeat",
@@ -23,7 +23,6 @@ export default function Tables() {
   const tabels = useEventStore((s) => s.tabels);
   const maxUserOnSingleTable = useEventStore((s) => s.maxUserOnSingleTable);
 
-
   const renderCell = useCallback((event: any, columnKey: any) => {
     const cellValue = event[columnKey];
     switch (columnKey) {
@@ -32,22 +31,25 @@ export default function Tables() {
       case "vacantSeat":
         return (
           <span className="opacity-90 font-normal flex justify-center">
-            {event?.users?.length != undefined ?
-            maxUserOnSingleTable - event?.users?.length > 0 ? (
-              <Chip color="warning" variant="flat">
-                {maxUserOnSingleTable - event?.users?.length} vacant
-              </Chip>
+            {event?.users?.length != undefined ? (
+              maxUserOnSingleTable - event?.users?.length > 0 ? (
+                <Chip color="warning" variant="flat">
+                  {maxUserOnSingleTable - event?.users?.length} vacant
+                </Chip>
+              ) : (
+                <Chip color="success" variant="flat">
+                  {event?.users?.length}/{maxUserOnSingleTable} Full
+                </Chip>
+              )
             ) : (
-              <Chip color="success" variant="flat">
-                {event?.users?.length}/{maxUserOnSingleTable} Full
-              </Chip>
-            ):"error"}
+              "error"
+            )}
           </span>
         );
-      case "tableNumber":
+      case "name":
         return (
           <span className="w-[20rem] opacity-90 font-normal">
-            {"Table#" + cellValue}
+            {"Table#" + event?.tableNumber}
           </span>
         );
       case "member":
