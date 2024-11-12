@@ -52,6 +52,7 @@ export default function page() {
       <main className="p-2 max-w-[50rem] mx-auto space-y-3">
         <div className="relative w-full group">
           <Input
+            value={value}
             className="w-full"
             type="search"
             startContent={<Icon icon="ic:round-search" />}
@@ -70,6 +71,7 @@ export default function page() {
                 setisDropVisible(true);
               }
               SearchUser(e.target.value);
+              setvalue(e.target.value);
             }}
           />
           {/* Dropdown list */}
@@ -89,6 +91,9 @@ export default function page() {
                   key={index}
                   className="px-4 py-2 flex items-center gap-3 cursor-pointer active:bg-danger-200"
                   onClick={(e) => {
+                    if (user.name) {
+                      setvalue(user.name);
+                    }
                     setselectedProfile(user);
                   }}
                 >
