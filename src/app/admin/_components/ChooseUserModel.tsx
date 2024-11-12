@@ -62,7 +62,7 @@ export default function ChooseUserModel({
                     {filteredData?.map((e, i) => {
                       return (
                         <div
-                          className="hover:bg-gray-700/50 p-2 rounded"
+                          className="hover:bg-gray-700/50 p-2 rounded-md cursor-pointer"
                           onClick={() => {
                             SetSwapperData(e, isFor);
                             closebtnRef?.current?.click();
@@ -114,9 +114,21 @@ export const UserCard = ({
           </>
         ) : (
           <div>
+            <div className="flex items-center gap-2">
+              <Icon icon="solar:user-bold" />
+              <span>{data?.name}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Icon icon="material-symbols:table-bar-rounded" />
+              <span className="text-xl font-bold">
+                {data?.tableNumber?.toString() == "0"
+                  ? "Theater seat"
+                  : data?.tableNumber ?? "N/A"}
+              </span>
+            </div>
             {/* _id {data?._id?.slice(20,data._id.length)} <br /> */}
-            name {data?.name} <br />
-            table {data?.tableNumber} <br />
+            {/* name {data?.name} <br />
+            table {data?.tableNumber} <br /> */}
           </div>
         )}
       </div>
