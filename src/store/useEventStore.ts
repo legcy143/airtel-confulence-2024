@@ -151,6 +151,9 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
         user1: UserInterface | null;
         user2: UserInterface | null;
       } = useFeature.getState().swapUserData;
+
+      let backupUserData = JSON.parse(JSON.stringify(data));
+
       toast.error("swap data was not save in database we fix this soon");
       if (!data.user1) {
         toast.error("Please select user 1 to swap");
@@ -170,7 +173,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       let inds = FullTable.findIndex(
         (e) => e.tableNumber == data.user2?.tableNumber
       );
-
+      // backup table data
       const PrevData1: TableInterface = JSON.parse(
         JSON.stringify(FullTable[indF])
       );
@@ -180,16 +183,50 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
 
       const t1Data = JSON.parse(JSON.stringify(FullTable[indF]));
       const t2Data = JSON.parse(JSON.stringify(FullTable[inds]));
+      // create new user instead  and remove last user
+      try {
+        // create new user
+        const reqBody1 = {
+          name: data.user1?.name,
+          email: data.user1?.email,
+          tableNumber: data.user2.tableNumber,
+          phoneNumber: data.user1?.phoneNumber,
+        };
+        const reqBody2 = {
+          name: data.user2?.name,
+          email: data.user2?.email,
+          tableNumber: data.user1.tableNumber,
+          phoneNumber: data.user2?.phoneNumber,
+        };
+        if (typeof reqBody1.tableNumber == "string")
+          reqBody1.tableNumber = parseInt(reqBody1.tableNumber);
+        let createUser1Res = await axios.post(
+          API_URL + "/airtel/user",
+          reqBody1
+        );
+        let createUser2Res = await axios.post(
+          API_URL + "/airtel/user",
+          reqBody2
+        );
+
+        data.user1 = createUser1Res.data.data as UserInterface;
+        data.user2 = createUser2Res.data.data as UserInterface;
+
+        // delete old user
+      } catch (error) {
+        // if failed then  return the flow
+        return false;
+      }
 
       let t1 = t1Data.users.map((e: UserInterface) => {
-        if (e._id == data.user1?._id) {
+        if (e._id == backupUserData.user1?._id) {
           return data.user2?._id;
         }
         return e._id;
       });
 
       let t2 = t2Data.users.map((e: UserInterface) => {
-        if (e._id == data.user2?._id) {
+        if (e._id == backupUserData.user2?._id) {
           return data.user1?._id;
         }
         return e._id;
@@ -200,49 +237,28 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       // @ts-ignore
       t2Data.users = t2;
 
-      const t1Res = await axios.patch(
-        API_URL + "/airtel/table/" + t1Data.tableNumber,
-        t1Data
-      );
-      const t2Res = await axios.patch(
-        API_URL + "/airtel/table/" + t2Data.tableNumber,
-        t2Data
-      );
-
       try {
-        const userUpdateres1 = await axios.patch(
-          API_URL + "/airtel/user/" + data.user2?._id,
-          {
-            ...data.user1,
-            tableNumber: data.user2?.tableNumber,
-          }
-        );
-        const userUpdateres2 = await axios.patch(
-          API_URL + "/airtel/user/" + data.user1._id,
-          {
-            ...data.user2,
-            tableNumber: data.user1?.tableNumber,
-          }
-        );
-      } catch (error) {
-        // reset changes
-        let p1u = PrevData1.users.map((e) => e._id);
-        let p2u = PrevData2.users.map((e) => e._id);
-
         const t1Res = await axios.patch(
           API_URL + "/airtel/table/" + t1Data.tableNumber,
-          {
-            ...PrevData1,
-            users: p1u,
-          }
+          t1Data
         );
         const t2Res = await axios.patch(
           API_URL + "/airtel/table/" + t2Data.tableNumber,
-          {
-            ...PrevData2,
-            users: p2u,
-          }
+          t2Data
         );
+        // delete old data
+        try {
+          await axios.delete(
+            API_URL + "/airtel/user/" + backupUserData.user1._id
+          );
+          await axios.delete(
+            API_URL + "/airtel/user/" + backupUserData.user2._id
+          );
+        } catch (error) {}
+      } catch (error) {
+        // delete new data data
+        await axios.delete(API_URL + "/airtel/user/" + data.user1._id);
+        await axios.delete(API_URL + "/airtel/user/" + data.user2._id);
       }
 
       // reset every thing
