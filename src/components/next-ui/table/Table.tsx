@@ -71,9 +71,11 @@ interface TableProps {
   classNames?: any;
   setNumberOfDataPerPage?: (num: number) => void;
   varients?: TableVariantProps;
+  loadingCell?: React.ReactNode;
 }
 
 export default function TableUI({
+  loadingCell,
   isLoading = false,
   TotalNumberOfData,
   action,
@@ -422,27 +424,33 @@ export default function TableUI({
         emptyContent={
           <>
             {isLoading ? (
-              <div>
-                {[1, 2, 3, 4, 5]?.map((e) => {
-                  return (
-                    <div key={e} className="flex gap-2">
-                      <Skeleton className="p-2 my-2 flex-1 rounded-lg max-w-14">
-                        Loading
-                      </Skeleton>
-                      {INITIAL_VISIBLE_COLUMNS?.map((e, i) => {
-                        return (
-                          <Skeleton
-                            key={e}
-                            className="p-2 my-2 flex-1 rounded-lg"
-                          >
+              <>
+                {loadingCell ? (
+                  <>{loadingCell}</>
+                ) : (
+                  <div>
+                    {[1, 2, 3, 4, 5]?.map((e) => {
+                      return (
+                        <div key={e} className="flex gap-2">
+                          <Skeleton className="p-2 my-2 flex-1 rounded-lg max-w-14">
                             Loading
                           </Skeleton>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
-              </div>
+                          {INITIAL_VISIBLE_COLUMNS?.map((e, i) => {
+                            return (
+                              <Skeleton
+                                key={e}
+                                className="p-2 my-2 flex-1 rounded-lg"
+                              >
+                                Loading
+                              </Skeleton>
+                            );
+                          })}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </>
             ) : (
               <>No {title} found</>
             )}

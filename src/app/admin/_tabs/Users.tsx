@@ -6,7 +6,7 @@ import { TableDataWithSequence } from "@/utils/TableData";
 import React, { useCallback, useEffect } from "react";
 import { Tooltip } from "@nextui-org/tooltip";
 import AddNewUserModel from "../_components/AddNewUserModel";
-import { Button } from "@nextui-org/react";
+import { Button, Skeleton } from "@nextui-org/react";
 import DeleteUserModel from "../_components/DeleteUserModel";
 import UpdateUserModel from "../_components/UpdateUserModel.tsx";
 import { toast } from "sonner";
@@ -27,6 +27,7 @@ const column: columnInterface[] = [
 
 export default function Users() {
   const fetchUsers = useEventStore((state) => state.fetchUsers);
+  const isUserFetchLoading = useEventStore((state) => state.isUserFetchLoading);
   const users = useEventStore((s) => s.users);
   useEffect(() => {
     if (!users) {
@@ -49,7 +50,7 @@ export default function Users() {
       case "email":
         return <div>{cellValue ?? "N/A"}</div>;
       case "name":
-        return <div className="min-w-[10rem]"> {cellValue ?? "N/A"}</div>;
+        return <div className="min-w-[10rem] font-medium"> {cellValue ?? "N/A"}</div>;
       case "action":
         return (
           <div className="py-2 flex items-center gap-4">
@@ -71,6 +72,16 @@ export default function Users() {
       selectionMode="none"
       statusOptions={[]}
       title="Users"
+      isLoading={isUserFetchLoading}
+      loadingCell={[1, 2, 3, 4, 5]?.map((e) => (
+        <div key={e} className="flex  gap-2 my-2">
+          <Skeleton className="w-[5rem] h-[2rem]"></Skeleton>
+          <Skeleton className="w-[8rem] h-[2rem]"></Skeleton>
+          <Skeleton className="w-[15rem] h-[2rem]"></Skeleton>
+          <Skeleton className="w-full h-[2rem]"></Skeleton>
+          <Skeleton className="w-[10rem] h-[2rem]"></Skeleton>
+        </div>
+      ))}
       renderCell={renderCell}
       tableData={TableDataWithSequence(users ?? [])}
       columns={column}

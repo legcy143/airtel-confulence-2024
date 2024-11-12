@@ -5,7 +5,7 @@ import { TableDataWithSequence } from "@/utils/TableData";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { columnInterface } from "@/components/next-ui/table/Table";
 import ViewMemberOnTable from "../_components/ViewMemberOnTable";
-import { Chip } from "@nextui-org/react";
+import { Chip, Skeleton } from "@nextui-org/react";
 import Image from "next/image";
 
 export const column: columnInterface[] = [
@@ -21,6 +21,7 @@ export const column: columnInterface[] = [
 
 export default function Tables() {
   const tabels = useEventStore((s) => s.tabels);
+  const isTableFetchLoading = useEventStore((s) => s.isTableFetchLoading);
   const maxUserOnSingleTable = useEventStore((s) => s.maxUserOnSingleTable);
 
   const renderCell = useCallback((event: any, columnKey: any) => {
@@ -71,6 +72,15 @@ export default function Tables() {
         selectionMode="none"
         statusOptions={[]}
         title="Tables"
+        isLoading={!isTableFetchLoading}
+        loadingCell={[1, 2, 3, 4, 5]?.map((e) => (
+          <div key={e} className="flex  gap-2 my-2">
+            <Skeleton className="w-[5rem] h-[2rem]"></Skeleton>
+            <Skeleton className="w-[8rem] h-[2rem]"></Skeleton>
+            <Skeleton className="w-[10rem] h-[2rem]"></Skeleton>
+            <Skeleton className="w-full h-[2rem]"></Skeleton>
+          </div>
+        ))}
         renderCell={renderCell}
         tableData={TableDataWithSequence(tabels ?? [])}
         columns={column}
