@@ -39,7 +39,7 @@ export default function Users() {
     try {
       if (navigator) {
         navigator.clipboard.writeText(_id);
-        toast.success("coppied "+_id);
+        toast.success("coppied " + _id);
       }
     } catch (error) {}
   };
@@ -50,7 +50,9 @@ export default function Users() {
       case "email":
         return <div>{cellValue ?? "N/A"}</div>;
       case "name":
-        return <div className="min-w-[10rem] font-medium"> {cellValue ?? "N/A"}</div>;
+        return (
+          <div className="min-w-[10rem] font-medium"> {cellValue ?? "N/A"}</div>
+        );
       case "action":
         return (
           <div className="flex items-center gap-4">
@@ -72,6 +74,7 @@ export default function Users() {
       selectionMode="none"
       statusOptions={[]}
       title="Users"
+      searchBy="name"
       isLoading={isUserFetchLoading}
       loadingCell={[1, 2, 3, 4, 5]?.map((e) => (
         <div key={e} className="flex  gap-2 my-2">
