@@ -31,5 +31,5 @@ export interface EventStoreInerface {
   ) => Promise<boolean>;
   updateUser: (_id: string, data: UserInterface) => Promise<boolean>;
   swapMemberSheet: () => Promise<boolean>;
-  AddNewMember: (data: UserInterface) => Promise<boolean>;
+  AddNewMember: (data: UserInterface ,bulkUpload?:boolean) => Promise<boolean>;
 }

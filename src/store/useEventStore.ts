@@ -34,7 +34,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       let res = await axios.get(API_URL + "/airtel/user");
       set({ users: res.data.data });
     } catch (error) {
-      console.log("user fetch error " ,error)
+      console.log("user fetch error ", error);
       toast.error("Internal server error");
     } finally {
       set({ isUserFetchLoading: false });
@@ -46,7 +46,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       let res = await axios.get(API_URL + "/airtel/table");
       set({ tabels: res.data.data });
     } catch (error) {
-      console.log("table fetch error " ,error)
+      console.log("table fetch error ", error);
       toast.error("Internal server error");
     } finally {
       set({ isTableFetchLoading: false });
@@ -101,7 +101,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
     }
   },
 
-  AddNewMember: async (data) => {
+  AddNewMember: async (data, bulkUpload = false) => {
     try {
       set({ isUserCreatingLoading: true });
       const { _id, ...reqbody } = data;
@@ -132,15 +132,20 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
           API_URL + "/airtel/table/" + newuser.tableNumber,
           tableBody
         );
-        await get().fetchTables();
-        await get().fetchUsers();
-        toast.success("User created sucessfully");
+        // is Bulk upload then stop it
+        if (!bulkUpload) {
+          await get().fetchTables();
+          await get().fetchUsers();
+          toast.success("User created sucessfully");
+        }
         return true;
       } catch (error) {
+        console.log("errorwhile creting user and appending to table", error);
         get().deleteUser(newuser._id, false, false);
         return false;
       }
     } catch (error) {
+      console.log("errorwhile creting user ", error);
       toast.error("Internal Server Error");
       return false;
     } finally {
