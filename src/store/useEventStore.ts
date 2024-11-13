@@ -34,6 +34,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       let res = await axios.get(API_URL + "/airtel/user");
       set({ users: res.data.data });
     } catch (error) {
+      console.log("user fetch error " ,error)
       toast.error("Internal server error");
     } finally {
       set({ isUserFetchLoading: false });
@@ -45,6 +46,7 @@ export const useEventStore = create<EventStoreInerface>((set, get) => ({
       let res = await axios.get(API_URL + "/airtel/table");
       set({ tabels: res.data.data });
     } catch (error) {
+      console.log("table fetch error " ,error)
       toast.error("Internal server error");
     } finally {
       set({ isTableFetchLoading: false });
