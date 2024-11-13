@@ -78,6 +78,7 @@ export default function AddNewUserModel() {
         return null;
       })
       ?.filter((e) => e != null);
+    console.log(vacantData);
     setacantTable(vacantData);
   };
 
@@ -123,8 +124,9 @@ export default function AddNewUserModel() {
                     description="Selcted means user have no seat in table"
                     checked={data.tableNumber?.toString() == "0"}
                     onChange={() => {
-                      let seatNumber: number | undefined =
-                        vacantTable[0]?.tableNumber;
+                      let c1 = vacantTable[0]?.tableNumber;
+                      let c2 = vacantTable[1]?.tableNumber;
+                      let seatNumber: number | undefined = c1 ? c1 : c2;
                       if (seatNumber) handleChange("tableNumber", seatNumber);
                       else {
                         toast.error("No seats avilable");
