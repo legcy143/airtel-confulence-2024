@@ -116,7 +116,8 @@ export default function page() {
         <div className="h-fit max-w-[90%] p-0 mb-3 overflow-hidden w-fit mx-auto rounded-md ">
           <img
             className="object-contain h-full w-fit mx-auto"
-            src="/assets/hall-layout.jpg"
+            // src="/assets/new-hall-layout.jpeg"
+            src={EventDetail.layout}
             alt="img"
           />
         </div>

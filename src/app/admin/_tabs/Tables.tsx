@@ -7,6 +7,7 @@ import { columnInterface } from "@/components/next-ui/table/Table";
 import ViewMemberOnTable from "../_components/ViewMemberOnTable";
 import { Chip, Skeleton } from "@nextui-org/react";
 import Image from "next/image";
+import { EventDetail } from "@/constants/EventDetail";
 
 export const column: columnInterface[] = [
   { name: "Sr.no", uid: "seq", className: " w-[5rem] text-center" },
@@ -97,7 +98,8 @@ export default function Tables() {
         <div className=" h-fit max-h-[100%] p-0 overflow-hidden w-fit mx-auto rounded-md">
           <img
             className="object-contain h-full mx-auto"
-            src="/assets/hall-layout.jpg"
+            // src="/assets/hall-layout.jpg"
+            src={EventDetail.layout}
             alt="img"
             loading="eager"
           />

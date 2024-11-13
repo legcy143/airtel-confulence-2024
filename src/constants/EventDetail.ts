@@ -11,6 +11,7 @@ export const EventDetail = {
     sm: "/assets/event-logo-big.png",
     md: "/assets/event-logo-big.png",
     lg: "/assets/event-logo-big.png",
-    favicon:"/assets/event-logo-big.png"
+    favicon: "/assets/event-logo-big.png",
   },
+  layout: "/assets/new-hall-layout.jpeg",
 };
