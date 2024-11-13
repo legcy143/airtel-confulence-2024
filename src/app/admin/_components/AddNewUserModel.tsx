@@ -78,7 +78,6 @@ export default function AddNewUserModel() {
         return null;
       })
       ?.filter((e) => e != null);
-    console.log(vacantData);
     setacantTable(vacantData);
   };
 
@@ -191,6 +190,10 @@ export default function AddNewUserModel() {
                   isDisabled={!data.name}
                   isLoading={isUserCreatingLoading}
                   onClick={async () => {
+                    if (!data.email) {
+                      // @ts-ignore
+                      delete data.email;
+                    }
                     let res = await AddNewMember(data);
                     if (res) {
                       closeBtnRef.current?.click();
