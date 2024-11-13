@@ -53,6 +53,12 @@ export default function Users() {
         return (
           <div className="min-w-[10rem] font-medium"> {cellValue ?? "N/A"}</div>
         );
+      case "tableNumber":
+        return (
+          <div className="w-fit opacity-90 font-normal">
+            {cellValue?.toString() == "0" ? "Theater seat" : cellValue}
+          </div>
+        );
       case "action":
         return (
           <div className="flex items-center gap-4">
