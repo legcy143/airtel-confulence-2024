@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Provider from "./Provider";
 import { EventDetail } from "@/constants/EventDetail";
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: "Airtel Confulence",
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <Provider>{children}</Provider>
+         <Analytics />
       </body>
     </html>
   );
