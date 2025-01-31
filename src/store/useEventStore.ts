@@ -9,8 +9,7 @@ import { useFeature } from "./useFetaure";
 import { swapUsers } from "./helper/SwapUser";
 import axios from "axios";
 
-// let API_URL = process.env.NEXT_PUBLIC_API_URL;
-let API_URL = "https://api-new.gokapturehub.com";
+let API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const useEventStore = create<EventStoreInerface>((set, get) => ({
   isFetchLoading: false,
